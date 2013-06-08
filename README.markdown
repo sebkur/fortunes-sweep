@@ -10,6 +10,11 @@ The applet was created by Benny Kjær Nielsen and Allan Odgaard in spring of 200
 
 Permission to copy, use, modify, sell and distribute this software is granted. This software is provided “as is” without express or implied warranty, and with no claim as to its suitability for any purpose.
 
+# Building and Running
+ant compile
+
+java -cp bin fortune.sweep.Fortune
+
 # Notes
 
 The purpose of the source is to visualize the algorithm, it is not a good base for an effecient implementation of the algorithm (it does not run in O(n log n) time).
