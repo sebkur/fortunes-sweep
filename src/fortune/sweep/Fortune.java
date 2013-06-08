@@ -12,6 +12,10 @@ import java.awt.event.ComponentListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import fortune.sweep.gui.Canvas;
+import fortune.sweep.gui.MyControls;
+import fortune.sweep.gui.MySettings;
+
 public class Fortune extends JPanel implements Runnable
 {
 
@@ -57,14 +61,14 @@ public class Fortune extends JPanel implements Runnable
 		});
 	}
 
-	MyCanvas canvas;
+	Canvas canvas;
 	MyControls controls;
 	Thread thread;
 
 	public void init()
 	{
 		setLayout(new BorderLayout());
-		canvas = new MyCanvas(getSize().width, getSize().height - 50, 85);
+		canvas = new Canvas(getSize().width, getSize().height - 50, 85);
 		add("North", new MySettings(canvas));
 		add("Center", canvas);
 		add("South", controls = new MyControls(this, canvas));

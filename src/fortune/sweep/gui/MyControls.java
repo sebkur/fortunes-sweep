@@ -1,4 +1,4 @@
-package fortune.sweep;
+package fortune.sweep.gui;
 
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
@@ -10,18 +10,22 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class MyControls extends Panel implements ActionListener
+import fortune.sweep.Fortune;
+
+public class MyControls extends Panel implements ActionListener
 {
+
+	private static final long serialVersionUID = -8452143409724541737L;
 
 	private Fortune fortune;
 
-	private MyCanvas canvas;
+	private Canvas canvas;
 	private Button buttons[];
 
-	public MyControls(Fortune fortune, MyCanvas mycanvas)
+	public MyControls(Fortune fortune, Canvas canvas)
 	{
 		this.fortune = fortune;
-		canvas = mycanvas;
+		this.canvas = canvas;
 		String as[] = { "Start", "Suspend", "Resume", "Next event",
 				"Next pixel", "Clear", "Restart" };
 		buttons = new Button[as.length];

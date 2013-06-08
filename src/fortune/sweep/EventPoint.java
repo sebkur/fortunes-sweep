@@ -1,21 +1,24 @@
 package fortune.sweep;
 
+import fortune.sweep.geometry.Point;
+import fortune.sweep.gui.Canvas;
+
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-class EventPoint extends MyPoint
+public class EventPoint extends Point
 {
 
 	EventPoint prev, next;
 
-	EventPoint(MyPoint mypoint)
+	public EventPoint(Point point)
 	{
-		super(mypoint);
+		super(point);
 	}
 
-	EventPoint(double d, double d1)
+	public EventPoint(double d, double d1)
 	{
 		super(d, d1);
 	}
@@ -49,9 +52,9 @@ class EventPoint extends MyPoint
 		}
 	}
 
-	public void action(MyCanvas mycanvas)
+	public void action(Canvas canvas)
 	{
-		mycanvas.arcs.insert(this, mycanvas.xPos, mycanvas.events);
+		canvas.getArcs().insert(this, canvas.getXPos(), canvas.getEventQueue());
 	}
 
 }

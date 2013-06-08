@@ -1,18 +1,20 @@
 package fortune.sweep;
 
+import fortune.sweep.geometry.Point;
+
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-class ParabolaPoint extends MyPoint
+public class ParabolaPoint extends Point
 {
 
 	double a, b, c;
 
-	public ParabolaPoint(MyPoint mypoint)
+	public ParabolaPoint(Point point)
 	{
-		super(mypoint);
+		super(point);
 	}
 
 	public double realX()
@@ -25,28 +27,27 @@ class ParabolaPoint extends MyPoint
 		return d - x;
 	}
 
-	public CirclePoint calculateCenter(MyPoint mypoint, ArcNode arcnode,
-			MyPoint mypoint1)
+	public CirclePoint calculateCenter(Point point, ArcNode arcnode,
+			Point point1)
 	{
 		CirclePoint circlepoint = null;
-		MyPoint mypoint2 = new MyPoint(arcnode.x - mypoint.x, arcnode.y
-				- mypoint.y);
-		MyPoint mypoint3 = new MyPoint(mypoint1.x - arcnode.x, mypoint1.y
+		Point point2 = new Point(arcnode.x - point.x, arcnode.y - point.y);
+		Point point3 = new Point(point1.x - arcnode.x, point1.y
 				- arcnode.y);
-		if (mypoint3.y * mypoint2.x > mypoint3.x * mypoint2.y) {
-			double d = -mypoint2.x / mypoint2.y;
-			double d1 = (mypoint.y + mypoint2.y / 2D) - d
-					* (mypoint.x + mypoint2.x / 2D);
-			double d2 = -mypoint3.x / mypoint3.y;
-			double d3 = (arcnode.y + mypoint3.y / 2D) - d2
-					* (arcnode.x + mypoint3.x / 2D);
+		if (point3.y * point2.x > point3.x * point2.y) {
+			double d = -point2.x / point2.y;
+			double d1 = (point.y + point2.y / 2D) - d
+					* (point.x + point2.x / 2D);
+			double d2 = -point3.x / point3.y;
+			double d3 = (arcnode.y + point3.y / 2D) - d2
+					* (arcnode.x + point3.x / 2D);
 			double d4;
 			double d5;
-			if (mypoint2.y == 0.0D) {
-				d4 = mypoint.x + mypoint2.x / 2D;
+			if (point2.y == 0.0D) {
+				d4 = point.x + point2.x / 2D;
 				d5 = d2 * d4 + d3;
-			} else if (mypoint3.y == 0.0D) {
-				d4 = arcnode.x + mypoint3.x / 2D;
+			} else if (point3.y == 0.0D) {
+				d4 = arcnode.x + point3.x / 2D;
 				d5 = d * d4 + d1;
 			} else {
 				d4 = (d3 - d1) / (d - d2);

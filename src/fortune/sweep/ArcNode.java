@@ -8,15 +8,19 @@ package fortune.sweep;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-class ArcNode extends ParabolaPoint
+import fortune.sweep.geometry.Edge;
+import fortune.sweep.geometry.Point;
+import fortune.sweep.gui.Canvas;
+
+public class ArcNode extends ParabolaPoint
 {
 	ArcNode next, prev;
 	CirclePoint circlePoint;
-	MyPoint startOfTrace;
+	Point startOfTrace;
 
-	public ArcNode(MyPoint mypoint)
+	public ArcNode(Point point)
 	{
-		super(mypoint);
+		super(point);
 	}
 
 	public void checkCircle(EventQueue eventqueue)
@@ -36,16 +40,16 @@ class ArcNode extends ParabolaPoint
 		}
 	}
 
-	public void completeTrace(MyCanvas mycanvas, MyPoint mypoint)
+	public void completeTrace(Canvas canvas, Point point)
 	{
 		if (startOfTrace != null) {
-			mycanvas.voronoi.addElement(new MyLine(startOfTrace, mypoint));
-			mycanvas.delaunay.addElement(new MyLine(this, next));
+			canvas.getVoronoi().addLine(new Edge(startOfTrace, point));
+			canvas.getDelaunay().addElement(new Edge(this, next));
 			startOfTrace = null;
 		}
 	}
 
-	public void checkBounds(MyCanvas mycanvas, double d)
+	public void checkBounds(Canvas canvas, double d)
 	{
 		if (next != null) {
 			next.init(d);
@@ -55,16 +59,16 @@ class ArcNode extends ParabolaPoint
 							- next.c);
 					double d1 = ad[0];
 					double d2 = d - F(d1);
-					Rectangle rectangle = mycanvas.getBounds();
+					Rectangle rectangle = canvas.getBounds();
 					if (d2 < startOfTrace.x && d2 < 0.0D || d1 < 0.0D
 							|| d2 >= (double) rectangle.width
 							|| d1 >= (double) rectangle.height)
-						completeTrace(mycanvas, new MyPoint(d2, d1));
+						completeTrace(canvas, new Point(d2, d1));
 				} catch (Throwable _ex) {
 					System.out.println("*** exception");
 				}
 			}
-			next.checkBounds(mycanvas, d);
+			next.checkBounds(canvas, d);
 		}
 	}
 
@@ -101,9 +105,9 @@ class ArcNode extends ParabolaPoint
 			next.next.checkCircle(eventqueue);
 
 			next.next.startOfTrace = startOfTrace;
-			startOfTrace = new MyPoint(sline - F(parabolapoint.y),
+			startOfTrace = new Point(sline - F(parabolapoint.y),
 					parabolapoint.y);
-			next.startOfTrace = new MyPoint(sline - F(parabolapoint.y),
+			next.startOfTrace = new Point(sline - F(parabolapoint.y),
 					parabolapoint.y);
 		} else {
 			next.insert(parabolapoint, sline, eventqueue);

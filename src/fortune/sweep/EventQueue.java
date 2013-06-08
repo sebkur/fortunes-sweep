@@ -7,10 +7,10 @@ package fortune.sweep;
 
 import java.awt.Graphics;
 
-class EventQueue
+public class EventQueue
 {
 
-	EventPoint events;
+	public EventPoint events;
 
 	public void insert(EventPoint p)
 	{

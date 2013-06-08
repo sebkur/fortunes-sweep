@@ -8,8 +8,10 @@ package fortune.sweep;
 import java.awt.Graphics;
 import java.util.Vector;
 
-class DelaunayClass extends Vector
+public class Delaunay extends Vector<Paintable>
 {
+
+	private static final long serialVersionUID = -1644395346085708102L;
 
 	public void paint(Graphics g)
 	{

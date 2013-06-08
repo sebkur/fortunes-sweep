@@ -1,4 +1,4 @@
-package fortune.sweep;
+package fortune.sweep.gui;
 
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
@@ -10,15 +10,17 @@ import java.awt.Panel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-class MySettings extends Panel implements ItemListener
+public class MySettings extends Panel implements ItemListener
 {
 
-	MyCanvas canvas;
+	private static final long serialVersionUID = -6537449209660520005L;
+
+	Canvas canvas;
 	Checkbox[] boxes;
 
-	public MySettings(MyCanvas mycanvas)
+	public MySettings(Canvas canvas)
 	{
-		canvas = mycanvas;
+		this.canvas = canvas;
 		String as[] = { "Circles", "Beachline", "Voronoi diagram",
 				"Delaunay triangulation" };
 

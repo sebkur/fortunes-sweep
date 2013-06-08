@@ -1,4 +1,4 @@
-package fortune.sweep;
+package fortune.sweep.geometry;
 
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
@@ -7,15 +7,17 @@ package fortune.sweep;
 
 import java.awt.Graphics;
 
-class MyLine implements Paintable
+import fortune.sweep.Paintable;
+
+public class Edge implements Paintable
 {
 
-	MyPoint p1, p2;
+	public Point p1, p2;
 
-	MyLine(MyPoint mypoint, MyPoint mypoint1)
+	public Edge(Point point, Point point1)
 	{
-		p1 = mypoint;
-		p2 = mypoint1;
+		p1 = point;
+		p2 = point1;
 	}
 
 	public void paint(Graphics g)

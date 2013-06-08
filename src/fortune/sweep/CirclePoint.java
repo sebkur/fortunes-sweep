@@ -7,13 +7,16 @@ package fortune.sweep;
 
 import java.awt.Graphics;
 
-class CirclePoint extends EventPoint
+import fortune.sweep.geometry.Point;
+import fortune.sweep.gui.Canvas;
+
+public class CirclePoint extends EventPoint
 {
 
 	double radius;
 	ArcNode arc;
 
-	CirclePoint(double d, double d1, ArcNode arcnode)
+	public CirclePoint(double d, double d1, ArcNode arcnode)
 	{
 		super(d, d1);
 		arc = arcnode;
@@ -29,26 +32,26 @@ class CirclePoint extends EventPoint
 				(int) (2D * d));
 	}
 
-	public void action(MyCanvas mycanvas)
+	public void action(Canvas canvas)
 	{
 		ArcNode arcnode = arc.prev;
 		ArcNode arcnode1 = arc.next;
-		MyPoint mypoint = new MyPoint(x - radius, y);
-		arc.completeTrace(mycanvas, mypoint);
-		arcnode.completeTrace(mycanvas, mypoint);
-		arcnode.startOfTrace = mypoint;
+		Point point = new Point(x - radius, y);
+		arc.completeTrace(canvas, point);
+		arcnode.completeTrace(canvas, point);
+		arcnode.startOfTrace = point;
 		arcnode.next = arcnode1;
 		arcnode1.prev = arcnode;
 		if (arcnode.circlePoint != null) {
-			mycanvas.events.remove(arcnode.circlePoint);
+			canvas.getEventQueue().remove(arcnode.circlePoint);
 			arcnode.circlePoint = null;
 		}
 		if (arcnode1.circlePoint != null) {
-			mycanvas.events.remove(arcnode1.circlePoint);
+			canvas.getEventQueue().remove(arcnode1.circlePoint);
 			arcnode1.circlePoint = null;
 		}
-		arcnode.checkCircle(mycanvas.events);
-		arcnode1.checkCircle(mycanvas.events);
+		arcnode.checkCircle(canvas.getEventQueue());
+		arcnode1.checkCircle(canvas.getEventQueue());
 	}
 
 }

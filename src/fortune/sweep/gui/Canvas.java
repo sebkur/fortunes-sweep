@@ -1,18 +1,24 @@
-package fortune.sweep;
+package fortune.sweep.gui;
 
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-class MyCanvas extends Canvas implements MouseListener
+import fortune.sweep.ArcTree;
+import fortune.sweep.Delaunay;
+import fortune.sweep.EventPoint;
+import fortune.sweep.EventQueue;
+import fortune.sweep.Voronoi;
+import fortune.sweep.geometry.Point;
+
+public class Canvas extends java.awt.Canvas implements MouseListener
 {
 
 	private static final long serialVersionUID = 461591430129084653L;
@@ -20,20 +26,20 @@ class MyCanvas extends Canvas implements MouseListener
 	Graphics offScreenGraphics;
 	Image offScreenImage;
 	int xPos;
-	VoronoiClass voronoi;
-	DelaunayClass delaunay;
+	Voronoi voronoi;
+	Delaunay delaunay;
 	boolean drawCircles, drawBeach, drawVoronoiLines, drawDelaunay;
 	EventQueue events;
 	ArcTree arcs;
 
-	public MyCanvas(int i, int j, int k)
+	public Canvas(int i, int j, int k)
 	{
 		drawCircles = false;
 		drawBeach = true;
 		drawVoronoiLines = true;
 		drawDelaunay = false;
 		addMouseListener(this);
-		voronoi = new VoronoiClass(i, j, k);
+		voronoi = new Voronoi(i, j, k);
 		init();
 	}
 
@@ -43,9 +49,9 @@ class MyCanvas extends Canvas implements MouseListener
 		arcs = new ArcTree();
 		events = new EventQueue();
 		voronoi.clear();
-		delaunay = new DelaunayClass();
-		for (int i = 0; i < voronoi.size(); i++) {
-			events.insert(new EventPoint((MyPoint) voronoi.elementAt(i)));
+		delaunay = new Delaunay();
+		for (int i = 0; i < voronoi.getNumberOfSites(); i++) {
+			events.insert(new EventPoint(voronoi.getSite(i)));
 		}
 	}
 
@@ -73,11 +79,11 @@ class MyCanvas extends Canvas implements MouseListener
 
 	public synchronized void mousePressed(MouseEvent mouseevent)
 	{
-		MyPoint mypoint = new MyPoint(mouseevent.getPoint());
-		if (mypoint.x > (double) xPos) {
-			voronoi.addElement(mypoint);
+		Point point = new Point(mouseevent.getPoint());
+		if (point.x > (double) xPos) {
+			voronoi.addSite(point);
 			voronoi.checkDegenerate();
-			events.insert(new EventPoint(mypoint));
+			events.insert(new EventPoint(point));
 			repaint();
 		}
 	}
@@ -154,7 +160,7 @@ class MyCanvas extends Canvas implements MouseListener
 
 	public synchronized void clear()
 	{
-		voronoi = new VoronoiClass(getBounds().width, getBounds().height, 0);
+		voronoi = new Voronoi(getBounds().width, getBounds().height, 0);
 		restart();
 	}
 
@@ -164,5 +170,29 @@ class MyCanvas extends Canvas implements MouseListener
 		initGraphics();
 		repaint();
 	}
+	
+	public Voronoi getVoronoi()
+	{
+		return voronoi;
+	}
+	
+	public Delaunay getDelaunay()
+	{
+		return delaunay;
+	}
 
+	public EventQueue getEventQueue()
+	{
+		return events;
+	}
+	
+	public ArcTree getArcs()
+	{
+		return arcs;
+	}
+	
+	public int getXPos()
+	{
+		return xPos;
+	}
 }

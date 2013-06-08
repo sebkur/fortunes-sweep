@@ -7,7 +7,7 @@ package fortune.sweep;
 
 import java.awt.Graphics;
 
-interface Paintable
+public interface Paintable
 {
 
 	public abstract void paint(Graphics g);
