@@ -3,9 +3,8 @@
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-import java.awt.*;
-import java.io.PrintStream;
-import java.util.Vector;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
 class ArcNode extends ParabolaPoint
 {

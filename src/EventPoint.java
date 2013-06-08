@@ -3,7 +3,6 @@
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-import java.io.PrintStream;
 
 class EventPoint extends MyPoint
 {

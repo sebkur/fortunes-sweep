@@ -3,90 +3,82 @@
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-import java.awt.*;
+import java.awt.Button;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class MyControls extends Panel
-	implements ActionListener
+class MyControls extends Panel implements ActionListener
 {
 
-	public MyControls(MyCanvas mycanvas)
+	private Fortune fortune;
+
+	private MyCanvas canvas;
+	private Button buttons[];
+
+	public MyControls(Fortune fortune, MyCanvas mycanvas)
 	{
-		running = true;
+		this.fortune = fortune;
 		canvas = mycanvas;
-		String as[] = {
-			"Suspend", "Resume", "Next event", "Next pixel", "Clear", "Restart"
-		};
+		String as[] = { "Start", "Suspend", "Resume", "Next event",
+				"Next pixel", "Clear", "Restart" };
 		buttons = new Button[as.length];
-		for(int i = 0; i < as.length; i++)
-		{
+		for (int i = 0; i < as.length; i++) {
 			buttons[i] = new Button(as[i]);
 			buttons[i].addActionListener(this);
 			add(buttons[i]);
 		}
 
-		buttons[1].setEnabled(false);
-		buttons[3].setEnabled(false);
+		threadRunning(false);
 	}
 
 	public void actionPerformed(ActionEvent actionevent)
 	{
 		String s = actionevent.getActionCommand();
-		if(s == "Suspend")
-		{
+		if (s == "Start") {
+			fortune.start();
+			threadRunning(true);
+		}
+		if (s == "Suspend") {
+			fortune.suspend();
 			threadRunning(false);
 			return;
 		}
-		if(s == "Resume")
-		{
+		if (s == "Resume") {
+			fortune.resume();
 			threadRunning(true);
 			return;
 		}
-		if(s == "Next event")
-		{
+		if (s == "Next event") {
 			canvas.step();
 			return;
 		}
-		if(s == "Next pixel")
-		{
+		if (s == "Next pixel") {
 			canvas.singlestep();
 			return;
 		}
-		if(s == "Clear")
-		{
+		if (s == "Clear") {
 			threadRunning(false);
 			canvas.clear();
 			return;
 		}
-		if(s == "Restart")
-		{
+		if (s == "Restart") {
 			canvas.restart();
-			threadRunning(true);
 		}
 	}
 
-	public void threadRunning(boolean flag)
+	public void threadRunning(boolean running)
 	{
-		if(flag != running)
-		{
-			if(running = flag)
-			{
-				buttons[0].setEnabled(true);
-				buttons[1].setEnabled(false);
-				buttons[3].setEnabled(false);
-				thread.resume();
-				return;
-			}
+		if (running) {
 			buttons[0].setEnabled(false);
 			buttons[1].setEnabled(true);
-			buttons[3].setEnabled(true);
-			thread.suspend();
+			buttons[2].setEnabled(false);
+			buttons[4].setEnabled(false);
+		} else {
+			buttons[0].setEnabled(true);
+			buttons[1].setEnabled(false);
+			buttons[2].setEnabled(true);
+			buttons[4].setEnabled(true);
 		}
 	}
-
-	MyCanvas canvas;
-	Thread thread;
-	boolean running;
-	Button buttons[];
 }

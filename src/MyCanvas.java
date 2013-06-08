@@ -3,10 +3,12 @@
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Vector;
 
 class MyCanvas extends Canvas
 	implements MouseListener
@@ -20,12 +22,11 @@ class MyCanvas extends Canvas
 		drawDelaunay = false;
 		addMouseListener(this);
 		Voronoi = new VoronoiClass(i, j, k);
+		init();
 	}
 
 	public synchronized void init()
 	{
-		offScreenImage = createImage(getBounds().width, getBounds().height);
-		offScreenGraphics = offScreenImage.getGraphics();
 		XPos = 0;
 		Arcs = new ArcTree();
 		Events = new EventQueue();
@@ -35,7 +36,12 @@ class MyCanvas extends Canvas
 		{
 			Events.insert(new EventPoint((MyPoint)Voronoi.elementAt(i)));
 		}
-
+	}
+	
+	public synchronized void initGraphics()
+	{
+		offScreenImage = createImage(getBounds().width, getBounds().height);
+		offScreenGraphics = offScreenImage.getGraphics();	
 	}
 
 	public void mouseClicked(MouseEvent mouseevent)
@@ -89,10 +95,18 @@ class MyCanvas extends Canvas
 
 	public void update(Graphics g)
 	{
+		ensureGraphics();
 		offScreenGraphics.setClip(g.getClipBounds());
 		paint(offScreenGraphics);
 		g.drawImage(offScreenImage, 0, 0, this);
 //		paint(g);
+	}
+
+	private void ensureGraphics()
+	{
+		if (offScreenImage == null) {
+			initGraphics();
+		}
 	}
 
 	public synchronized boolean singlestep ()
@@ -129,6 +143,7 @@ class MyCanvas extends Canvas
 		} else
 		{
 			init();
+			initGraphics();
 		}
 		Arcs.checkBounds(this, XPos);
 		repaint();
@@ -143,6 +158,7 @@ class MyCanvas extends Canvas
 	public synchronized void restart()
 	{
 		init();
+		initGraphics();
 		repaint();
 	}
 

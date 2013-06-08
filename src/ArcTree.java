@@ -4,7 +4,6 @@
 // Source File Name:   Fortune.java
 
 import java.awt.Graphics;
-import java.io.PrintStream;
 
 class ArcTree
 {

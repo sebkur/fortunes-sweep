@@ -3,7 +3,8 @@
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
 // Source File Name:   Fortune.java
 
-import java.awt.*;
+import java.awt.Checkbox;
+import java.awt.Panel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
