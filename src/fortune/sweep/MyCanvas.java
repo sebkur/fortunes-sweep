@@ -1,4 +1,5 @@
 package fortune.sweep;
+
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
@@ -11,9 +12,19 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-class MyCanvas extends Canvas
-	implements MouseListener
+class MyCanvas extends Canvas implements MouseListener
 {
+
+	private static final long serialVersionUID = 461591430129084653L;
+
+	Graphics offScreenGraphics;
+	Image offScreenImage;
+	int xPos;
+	VoronoiClass voronoi;
+	DelaunayClass delaunay;
+	boolean drawCircles, drawBeach, drawVoronoiLines, drawDelaunay;
+	EventQueue events;
+	ArcTree arcs;
 
 	public MyCanvas(int i, int j, int k)
 	{
@@ -22,27 +33,26 @@ class MyCanvas extends Canvas
 		drawVoronoiLines = true;
 		drawDelaunay = false;
 		addMouseListener(this);
-		Voronoi = new VoronoiClass(i, j, k);
+		voronoi = new VoronoiClass(i, j, k);
 		init();
 	}
 
 	public synchronized void init()
 	{
-		XPos = 0;
-		Arcs = new ArcTree();
-		Events = new EventQueue();
-		Voronoi.clear();
-		Delaunay = new DelaunayClass();
-		for(int i = 0; i < Voronoi.size(); i++)
-		{
-			Events.insert(new EventPoint((MyPoint)Voronoi.elementAt(i)));
+		xPos = 0;
+		arcs = new ArcTree();
+		events = new EventQueue();
+		voronoi.clear();
+		delaunay = new DelaunayClass();
+		for (int i = 0; i < voronoi.size(); i++) {
+			events.insert(new EventPoint((MyPoint) voronoi.elementAt(i)));
 		}
 	}
-	
+
 	public synchronized void initGraphics()
 	{
 		offScreenImage = createImage(getBounds().width, getBounds().height);
-		offScreenGraphics = offScreenImage.getGraphics();	
+		offScreenGraphics = offScreenImage.getGraphics();
 	}
 
 	public void mouseClicked(MouseEvent mouseevent)
@@ -64,11 +74,10 @@ class MyCanvas extends Canvas
 	public synchronized void mousePressed(MouseEvent mouseevent)
 	{
 		MyPoint mypoint = new MyPoint(mouseevent.getPoint());
-		if(mypoint.x > (double)XPos)
-		{
-			Voronoi.addElement(mypoint);
-			Voronoi.checkDegenerate();
-			Events.insert(new EventPoint(mypoint));
+		if (mypoint.x > (double) xPos) {
+			voronoi.addElement(mypoint);
+			voronoi.checkDegenerate();
+			events.insert(new EventPoint(mypoint));
 			repaint();
 		}
 	}
@@ -78,19 +87,17 @@ class MyCanvas extends Canvas
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getBounds().width, getBounds().height);
 		g.setColor(Color.blue);
-		Voronoi.paint(g, drawVoronoiLines);
+		voronoi.paint(g, drawVoronoiLines);
 		g.setColor(Color.red);
-		g.drawLine(XPos, 0, XPos, getBounds().height);
-		if(Events != null && Arcs != null)
-		{
+		g.drawLine(xPos, 0, xPos, getBounds().height);
+		if (events != null && arcs != null) {
 			g.setColor(Color.black);
-			Events.paint(g, drawCircles);
-			Arcs.paint(g, XPos, drawVoronoiLines, drawBeach);
+			events.paint(g, drawCircles);
+			arcs.paint(g, xPos, drawVoronoiLines, drawBeach);
 		}
-		if(drawDelaunay)
-		{
+		if (drawDelaunay) {
 			g.setColor(Color.gray);
-			Delaunay.paint(g);
+			delaunay.paint(g);
 		}
 	}
 
@@ -100,7 +107,7 @@ class MyCanvas extends Canvas
 		offScreenGraphics.setClip(g.getClipBounds());
 		paint(offScreenGraphics);
 		g.drawImage(offScreenImage, 0, 0, this);
-//		paint(g);
+		// paint(g);
 	}
 
 	private void ensureGraphics()
@@ -110,49 +117,44 @@ class MyCanvas extends Canvas
 		}
 	}
 
-	public synchronized boolean singlestep ()
+	public synchronized boolean singlestep()
 	{
-		if(Events.Events == null || (double)XPos < Events.Events.x)
-			XPos++;
+		if (events.events == null || (double) xPos < events.events.x)
+			xPos++;
 
-		while(Events.Events != null && (double)XPos >= Events.Events.x) 
-		{
-			EventPoint eventpoint = Events.pop();
-			XPos = Math.max(XPos, (int)eventpoint.x);
+		while (events.events != null && (double) xPos >= events.events.x) {
+			EventPoint eventpoint = events.pop();
+			xPos = Math.max(xPos, (int) eventpoint.x);
 			eventpoint.action(this);
-			Arcs.checkBounds(this, XPos);
+			arcs.checkBounds(this, xPos);
 		}
 
-		if(XPos > getBounds().width && Events.Events == null)
-			Arcs.checkBounds(this, XPos);
+		if (xPos > getBounds().width && events.events == null)
+			arcs.checkBounds(this, xPos);
 
 		repaint();
-		return Events.Events != null || XPos < 1000 + getBounds().width;
+		return events.events != null || xPos < 1000 + getBounds().width;
 	}
 
 	public synchronized void step()
 	{
-		EventPoint eventpoint = Events.pop();
-		if(eventpoint != null)
-		{
-			XPos = Math.max(XPos, (int)eventpoint.x);
+		EventPoint eventpoint = events.pop();
+		if (eventpoint != null) {
+			xPos = Math.max(xPos, (int) eventpoint.x);
 			eventpoint.action(this);
-		} else
-		if(XPos < getBounds().width)
-		{
-			XPos = getBounds().width;
-		} else
-		{
+		} else if (xPos < getBounds().width) {
+			xPos = getBounds().width;
+		} else {
 			init();
 			initGraphics();
 		}
-		Arcs.checkBounds(this, XPos);
+		arcs.checkBounds(this, xPos);
 		repaint();
 	}
 
 	public synchronized void clear()
 	{
-		Voronoi = new VoronoiClass(getBounds().width, getBounds().height, 0);
+		voronoi = new VoronoiClass(getBounds().width, getBounds().height, 0);
 		restart();
 	}
 
@@ -163,12 +165,4 @@ class MyCanvas extends Canvas
 		repaint();
 	}
 
-	Graphics offScreenGraphics;
-	Image offScreenImage;
-	int XPos;
-	VoronoiClass Voronoi;
-	DelaunayClass Delaunay;
-	boolean drawCircles, drawBeach, drawVoronoiLines, drawDelaunay;
-	EventQueue Events;
-	ArcTree Arcs;
 }

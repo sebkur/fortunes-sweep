@@ -1,4 +1,5 @@
 package fortune.sweep;
+
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
@@ -8,34 +9,36 @@ import java.awt.Graphics;
 
 class EventQueue
 {
-	public void insert (EventPoint p)
-	{
-		if(Events != null)
-			Events.insert(p);
 
-		if(p.Prev == null)
-			Events = p;
+	EventPoint events;
+
+	public void insert(EventPoint p)
+	{
+		if (events != null)
+			events.insert(p);
+
+		if (p.prev == null)
+			events = p;
 	}
 
-	public void remove (EventPoint eventpoint)
+	public void remove(EventPoint eventpoint)
 	{
-		if(eventpoint.Next != null)
-			eventpoint.Next.Prev = eventpoint.Prev;
+		if (eventpoint.next != null)
+			eventpoint.next.prev = eventpoint.prev;
 
-		if(eventpoint.Prev != null)
-				eventpoint.Prev.Next = eventpoint.Next;
-		else	Events = eventpoint.Next;
+		if (eventpoint.prev != null)
+			eventpoint.prev.next = eventpoint.next;
+		else
+			events = eventpoint.next;
 	}
 
-	public EventPoint pop ()
+	public EventPoint pop()
 	{
-		EventPoint eventpoint = Events;
-		if(eventpoint != null)
-		{
-			Events = Events.Next;
-			if(Events != null)
-			{
-				Events.Prev = null;
+		EventPoint eventpoint = events;
+		if (eventpoint != null) {
+			events = events.next;
+			if (events != null) {
+				events.prev = null;
 			}
 		}
 		return eventpoint;
@@ -43,16 +46,12 @@ class EventQueue
 
 	public void paint(Graphics g, boolean flag)
 	{
-		for(EventPoint eventpoint = Events; eventpoint != null; eventpoint = eventpoint.Next)
-		{
-			if(flag || !(eventpoint instanceof CirclePoint))
-			{
+		for (EventPoint eventpoint = events; eventpoint != null; eventpoint = eventpoint.next) {
+			if (flag || !(eventpoint instanceof CirclePoint)) {
 				eventpoint.paint(g);
 			}
 		}
 
 	}
 
-
-	EventPoint Events;
 }

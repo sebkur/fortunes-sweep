@@ -1,4 +1,5 @@
 package fortune.sweep;
+
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: packfields(5) packimports(3) nocasts braces 
@@ -13,6 +14,8 @@ import javax.swing.JPanel;
 
 public class Fortune extends JPanel implements Runnable
 {
+
+	private static final long serialVersionUID = 3917389635770683885L;
 
 	public static void main(String[] args)
 	{
@@ -54,6 +57,10 @@ public class Fortune extends JPanel implements Runnable
 		});
 	}
 
+	MyCanvas canvas;
+	MyControls controls;
+	Thread thread;
+
 	public void init()
 	{
 		setLayout(new BorderLayout());
@@ -90,10 +97,6 @@ public class Fortune extends JPanel implements Runnable
 			return;
 		}
 	}
-
-	MyCanvas canvas;
-	MyControls controls;
-	Thread thread;
 
 	public void suspend()
 	{
