@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 import fortune.sweep.Fortune;
 
-public class MyControls extends Panel implements ActionListener
+public class Controls extends Panel implements ActionListener
 {
 
 	private static final long serialVersionUID = -8452143409724541737L;
@@ -22,7 +22,7 @@ public class MyControls extends Panel implements ActionListener
 	private Canvas canvas;
 	private Button buttons[];
 
-	public MyControls(Fortune fortune, Canvas canvas)
+	public Controls(Fortune fortune, Canvas canvas)
 	{
 		this.fortune = fortune;
 		this.canvas = canvas;

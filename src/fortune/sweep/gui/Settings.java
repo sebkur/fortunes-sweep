@@ -10,7 +10,7 @@ import java.awt.Panel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class MySettings extends Panel implements ItemListener
+public class Settings extends Panel implements ItemListener
 {
 
 	private static final long serialVersionUID = -6537449209660520005L;
@@ -18,7 +18,7 @@ public class MySettings extends Panel implements ItemListener
 	Canvas canvas;
 	Checkbox[] boxes;
 
-	public MySettings(Canvas canvas)
+	public Settings(Canvas canvas)
 	{
 		this.canvas = canvas;
 		String as[] = { "Circles", "Beachline", "Voronoi diagram",
