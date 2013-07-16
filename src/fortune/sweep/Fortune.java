@@ -74,21 +74,30 @@ public class Fortune extends JPanel implements Runnable
 		add("South", controls = new Controls(this, canvas));
 	}
 
-	public void start()
+	public boolean running = false;
+
+	public boolean toggleRunning()
 	{
-		if (thread == null) {
-			thread = new Thread(this);
-			thread.start();
+		if (!running) {
+			if (thread == null) {
+				thread = new Thread(this);
+				running = true;
+				thread.start();
+			} else {
+				running = true;
+				thread.resume();
+			}
 		} else {
-			thread.resume();
+			running = false;
+			thread.suspend();
 		}
+		return running;
 	}
 
 	public void run()
 	{
 		if (thread != null) {
 			do {
-				canvas.init();
 				while (canvas.singlestep()) {
 					try {
 						Thread.sleep(25L);
@@ -102,13 +111,4 @@ public class Fortune extends JPanel implements Runnable
 		}
 	}
 
-	public void suspend()
-	{
-		thread.suspend();
-	}
-
-	public void resume()
-	{
-		thread.resume();
-	}
 }

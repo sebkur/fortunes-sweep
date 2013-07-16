@@ -22,12 +22,14 @@ public class Controls extends Panel implements ActionListener
 	private Canvas canvas;
 	private Button buttons[];
 
+	private static String PLAY = "Play";
+	private static String PAUSE = "Pause";
+
 	public Controls(Fortune fortune, Canvas canvas)
 	{
 		this.fortune = fortune;
 		this.canvas = canvas;
-		String as[] = { "Start", "Suspend", "Resume", "Next event",
-				"Next pixel", "Clear", "Restart" };
+		String as[] = { PLAY, "Next event", "Next pixel", "Clear", "Restart" };
 		buttons = new Button[as.length];
 		for (int i = 0; i < as.length; i++) {
 			buttons[i] = new Button(as[i]);
@@ -38,37 +40,23 @@ public class Controls extends Panel implements ActionListener
 		threadRunning(false);
 	}
 
-	public void actionPerformed(ActionEvent actionevent)
+	public void actionPerformed(ActionEvent e)
 	{
-		String s = actionevent.getActionCommand();
-		if (s == "Start") {
-			fortune.start();
-			threadRunning(true);
-		}
-		if (s == "Suspend") {
-			fortune.suspend();
-			threadRunning(false);
-			return;
-		}
-		if (s == "Resume") {
-			fortune.resume();
-			threadRunning(true);
-			return;
-		}
-		if (s == "Next event") {
+		String s = e.getActionCommand();
+		if (e.getSource() == buttons[0]) {
+			boolean running = fortune.toggleRunning();
+			threadRunning(running);
+		} else if (e.getSource() == buttons[1]) {
 			canvas.step();
 			return;
-		}
-		if (s == "Next pixel") {
+		} else if (e.getSource() == buttons[2]) {
 			canvas.singlestep();
 			return;
-		}
-		if (s == "Clear") {
+		} else if (e.getSource() == buttons[3]) {
 			threadRunning(false);
 			canvas.clear();
 			return;
-		}
-		if (s == "Restart") {
+		} else if (e.getSource() == buttons[4]) {
 			canvas.restart();
 		}
 	}
@@ -76,15 +64,14 @@ public class Controls extends Panel implements ActionListener
 	public void threadRunning(boolean running)
 	{
 		if (running) {
-			buttons[0].setEnabled(false);
-			buttons[1].setEnabled(true);
+			buttons[0].setLabel(PAUSE);
 			buttons[2].setEnabled(false);
-			buttons[4].setEnabled(false);
 		} else {
-			buttons[0].setEnabled(true);
-			buttons[1].setEnabled(false);
+			buttons[0].setLabel(PLAY);
 			buttons[2].setEnabled(true);
-			buttons[4].setEnabled(true);
 		}
+		buttons[0].invalidate();
+		invalidate();
+		validate();
 	}
 }
