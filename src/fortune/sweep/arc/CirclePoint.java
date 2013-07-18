@@ -1,4 +1,4 @@
-package fortune.sweep;
+package fortune.sweep.arc;
 
 // Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
@@ -7,6 +7,7 @@ package fortune.sweep;
 
 import java.awt.Graphics;
 
+import fortune.sweep.EventPoint;
 import fortune.sweep.geometry.Point;
 import fortune.sweep.gui.Canvas;
 

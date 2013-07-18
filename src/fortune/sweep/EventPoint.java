@@ -1,5 +1,6 @@
 package fortune.sweep;
 
+import fortune.sweep.arc.CirclePoint;
 import fortune.sweep.geometry.Point;
 import fortune.sweep.gui.Canvas;
 

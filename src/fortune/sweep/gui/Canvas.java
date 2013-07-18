@@ -11,11 +11,11 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import fortune.sweep.ArcTree;
 import fortune.sweep.Delaunay;
 import fortune.sweep.EventPoint;
 import fortune.sweep.EventQueue;
 import fortune.sweep.Voronoi;
+import fortune.sweep.arc.ArcTree;
 import fortune.sweep.geometry.Point;
 
 public class Canvas extends java.awt.Canvas implements MouseListener

@@ -7,6 +7,8 @@ package fortune.sweep;
 
 import java.awt.Graphics;
 
+import fortune.sweep.arc.CirclePoint;
+
 public class EventQueue
 {
 
