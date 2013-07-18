@@ -1,52 +1,56 @@
 package fortune.sweep.gui;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
-import java.awt.Checkbox;
-import java.awt.Panel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class Settings extends Panel implements ItemListener
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+
+public class Settings extends JPanel implements ItemListener
 {
 
 	private static final long serialVersionUID = -6537449209660520005L;
 
-	Canvas canvas;
-	Checkbox[] boxes;
+	private Canvas canvas;
+	
+	private JCheckBox[] boxes;
+
+	private static final String TEXT_CIRCLES = "Circles";
+	private static final String TEXT_BEACHLINE = "Beachline";
+	private static final String TEXT_VORONOI = "Voronoi diagram";
+	private static final String TEXT_DELAUNAY = "Delaunay triangulation";
 
 	public Settings(Canvas canvas)
 	{
 		this.canvas = canvas;
-		String as[] = { "Circles", "Beachline", "Voronoi diagram",
-				"Delaunay triangulation" };
+		String as[] = { TEXT_CIRCLES, TEXT_BEACHLINE, TEXT_VORONOI,
+				TEXT_DELAUNAY };
 
-		boxes = new Checkbox[as.length];
+		boxes = new JCheckBox[as.length];
 		for (int i = 0; i < as.length; i++) {
-			boxes[i] = new Checkbox(as[i]);
+			boxes[i] = new JCheckBox(as[i]);
 			boxes[i].addItemListener(this);
 			add(boxes[i]);
 		}
 
-		boxes[1].setState(true);
-		boxes[2].setState(true);
+		boxes[1].setSelected(true);
+		boxes[2].setSelected(true);
 	}
 
-	public void itemStateChanged(ItemEvent itemevent)
+	public void itemStateChanged(ItemEvent e)
 	{
-		String s = itemevent.getItem().toString();
-		boolean flag = itemevent.getStateChange() == 1;
-		if (s == "Circles")
+		JCheckBox box = (JCheckBox) e.getItem();
+		String s = box.getText();
+		boolean flag = box.isSelected();
+		if (s.equals(TEXT_CIRCLES)) {
 			canvas.drawCircles = flag;
-		else if (s == "Beachline")
+		} else if (s.equals(TEXT_BEACHLINE)) {
 			canvas.drawBeach = flag;
-		else if (s == "Voronoi diagram")
+		} else if (s.equals(TEXT_VORONOI)) {
 			canvas.drawVoronoiLines = flag;
-		else if (s == "Delaunay triangulation")
+		} else if (s.equals(TEXT_DELAUNAY)) {
 			canvas.drawDelaunay = flag;
+		}
 		canvas.repaint();
 	}
 

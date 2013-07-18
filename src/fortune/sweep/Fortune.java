@@ -1,13 +1,6 @@
 package fortune.sweep;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
 import java.awt.BorderLayout;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -32,46 +25,19 @@ public class Fortune extends JPanel implements Runnable
 		frame.setSize(800, 600);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		fortune.addComponentListener(new ComponentListener() {
-
-			@Override
-			public void componentShown(ComponentEvent e)
-			{
-				// fortune.start();
-			}
-
-			@Override
-			public void componentResized(ComponentEvent e)
-			{
-
-			}
-
-			@Override
-			public void componentMoved(ComponentEvent e)
-			{
-
-			}
-
-			@Override
-			public void componentHidden(ComponentEvent e)
-			{
-
-			}
-		});
 	}
 
-	Canvas canvas;
-	Controls controls;
-	Thread thread;
+	private Canvas canvas;
+	private Controls controls;
+	private Thread thread;
 
 	public void init()
 	{
 		setLayout(new BorderLayout());
 		canvas = new Canvas(getSize().width, getSize().height - 50, 85);
-		add("North", new Settings(canvas));
-		add("Center", canvas);
-		add("South", controls = new Controls(this, canvas));
+		add(new Settings(canvas), BorderLayout.NORTH);
+		add(canvas, BorderLayout.CENTER);
+		add(controls = new Controls(this, canvas), BorderLayout.SOUTH);
 	}
 
 	public boolean running = false;

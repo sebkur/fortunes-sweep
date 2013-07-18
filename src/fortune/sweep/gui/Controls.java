@@ -1,14 +1,10 @@
 package fortune.sweep.gui;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
-import java.awt.Button;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 
 import fortune.sweep.Fortune;
 
@@ -20,19 +16,25 @@ public class Controls extends Panel implements ActionListener
 	private Fortune fortune;
 
 	private Canvas canvas;
-	private Button buttons[];
 
-	private static String PLAY = "Play";
-	private static String PAUSE = "Pause";
+	private JButton buttons[];
+
+	private static String TEXT_PLAY = "Play";
+	private static String TEXT_PAUSE = "Pause";
+	private static String TEXT_NEXT_EVENT = "Next event";
+	private static String TEXT_NEXT_PIXEL = "Next pixel";
+	private static String TEXT_CLEAR = "Clear";
+	private static String TEXT_RESTART = "Restart";
 
 	public Controls(Fortune fortune, Canvas canvas)
 	{
 		this.fortune = fortune;
 		this.canvas = canvas;
-		String as[] = { PLAY, "Next event", "Next pixel", "Clear", "Restart" };
-		buttons = new Button[as.length];
+		String as[] = { TEXT_PLAY, TEXT_NEXT_EVENT, TEXT_NEXT_PIXEL,
+				TEXT_CLEAR, TEXT_RESTART };
+		buttons = new JButton[as.length];
 		for (int i = 0; i < as.length; i++) {
-			buttons[i] = new Button(as[i]);
+			buttons[i] = new JButton(as[i]);
 			buttons[i].addActionListener(this);
 			add(buttons[i]);
 		}
@@ -42,7 +44,6 @@ public class Controls extends Panel implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		String s = e.getActionCommand();
 		if (e.getSource() == buttons[0]) {
 			boolean running = fortune.toggleRunning();
 			threadRunning(running);
@@ -64,10 +65,10 @@ public class Controls extends Panel implements ActionListener
 	public void threadRunning(boolean running)
 	{
 		if (running) {
-			buttons[0].setLabel(PAUSE);
+			buttons[0].setText(TEXT_PAUSE);
 			buttons[2].setEnabled(false);
 		} else {
-			buttons[0].setLabel(PLAY);
+			buttons[0].setText(TEXT_PLAY);
 			buttons[2].setEnabled(true);
 		}
 		buttons[0].invalidate();
