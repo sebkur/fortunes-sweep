@@ -1,4 +1,4 @@
-package fortune.sweep.paint;
+package fortune.sweep.gui.swing;
 
 import java.awt.Graphics;
 import java.util.List;
@@ -12,6 +12,7 @@ import fortune.sweep.arc.CirclePoint;
 import fortune.sweep.arc.ParabolaPoint;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
+import fortune.sweep.gui.Painter;
 
 public class AwtPainter implements Painter
 {

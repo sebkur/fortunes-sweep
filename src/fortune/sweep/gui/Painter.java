@@ -1,4 +1,4 @@
-package fortune.sweep.paint;
+package fortune.sweep.gui;
 
 import fortune.sweep.Delaunay;
 import fortune.sweep.EventQueue;

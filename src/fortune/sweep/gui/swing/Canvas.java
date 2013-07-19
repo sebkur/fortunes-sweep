@@ -10,8 +10,7 @@ import javax.swing.JPanel;
 import fortune.sweep.Algorithm;
 import fortune.sweep.AlgorithmWatcher;
 import fortune.sweep.geometry.Point;
-import fortune.sweep.paint.AwtPainter;
-import fortune.sweep.paint.Painter;
+import fortune.sweep.gui.Painter;
 
 public class Canvas extends JPanel implements AlgorithmWatcher
 {
