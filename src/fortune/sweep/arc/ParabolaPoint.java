@@ -10,7 +10,7 @@ import fortune.sweep.geometry.Point;
 public class ParabolaPoint extends Point
 {
 
-	double a, b, c;
+	protected double a, b, c;
 
 	public ParabolaPoint(Point point)
 	{
@@ -31,23 +31,23 @@ public class ParabolaPoint extends Point
 			Point point1)
 	{
 		CirclePoint circlepoint = null;
-		Point point2 = new Point(arcnode.x - point.x, arcnode.y - point.y);
-		Point point3 = new Point(point1.x - arcnode.x, point1.y
+		Point point2 = new Point(arcnode.x - point.getX(), arcnode.y - point.getY());
+		Point point3 = new Point(point1.getX() - arcnode.x, point1.getY()
 				- arcnode.y);
-		if (point3.y * point2.x > point3.x * point2.y) {
-			double d = -point2.x / point2.y;
-			double d1 = (point.y + point2.y / 2D) - d
-					* (point.x + point2.x / 2D);
-			double d2 = -point3.x / point3.y;
-			double d3 = (arcnode.y + point3.y / 2D) - d2
-					* (arcnode.x + point3.x / 2D);
+		if (point3.getY() * point2.getX() > point3.getX() * point2.getY()) {
+			double d = -point2.getX() / point2.getY();
+			double d1 = (point.getY() + point2.getY() / 2D) - d
+					* (point.getX() + point2.getX() / 2D);
+			double d2 = -point3.getX() / point3.getY();
+			double d3 = (arcnode.y + point3.getY() / 2D) - d2
+					* (arcnode.x + point3.getX() / 2D);
 			double d4;
 			double d5;
-			if (point2.y == 0.0D) {
-				d4 = point.x + point2.x / 2D;
+			if (point2.getY() == 0.0D) {
+				d4 = point.getX() + point2.getX() / 2D;
 				d5 = d2 * d4 + d3;
-			} else if (point3.y == 0.0D) {
-				d4 = arcnode.x + point3.x / 2D;
+			} else if (point3.getY() == 0.0D) {
+				d4 = arcnode.x + point3.getX() / 2D;
 				d5 = d * d4 + d1;
 			} else {
 				d4 = (d3 - d1) / (d - d2);

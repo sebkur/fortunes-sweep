@@ -61,7 +61,7 @@ public class ArcNode extends ParabolaPoint
 					double d1 = ad[0];
 					double d2 = d - F(d1);
 					Rectangle rectangle = canvas.getBounds();
-					if (d2 < startOfTrace.x && d2 < 0.0D || d1 < 0.0D
+					if (d2 < startOfTrace.getX() && d2 < 0.0D || d1 < 0.0D
 							|| d2 >= (double) rectangle.width
 							|| d1 >= (double) rectangle.height)
 						completeTrace(canvas, new Point(d2, d1));
@@ -106,10 +106,10 @@ public class ArcNode extends ParabolaPoint
 			next.next.checkCircle(eventqueue);
 
 			next.next.startOfTrace = startOfTrace;
-			startOfTrace = new Point(sline - F(parabolapoint.y),
-					parabolapoint.y);
-			next.startOfTrace = new Point(sline - F(parabolapoint.y),
-					parabolapoint.y);
+			startOfTrace = new Point(sline - F(parabolapoint.getY()),
+					parabolapoint.getY());
+			next.startOfTrace = new Point(sline - F(parabolapoint.getY()),
+					parabolapoint.getY());
 		} else {
 			next.insert(parabolapoint, sline, eventqueue);
 		}
@@ -169,7 +169,7 @@ public class ArcNode extends ParabolaPoint
 				double d8 = d2;
 				g.getClipBounds();
 				g.getClipBounds();
-				g.drawLine((int) startOfTrace.x, (int) startOfTrace.y,
+				g.drawLine((int) startOfTrace.getX(), (int) startOfTrace.getY(),
 						(int) d7, (int) d8);
 			}
 		}

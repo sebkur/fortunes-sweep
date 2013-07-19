@@ -40,17 +40,18 @@ public class Voronoi
 			Point min = sites.get(0), next = min;
 			for (int i = 1; i < sites.size(); i++) {
 				Point element = sites.get(i);
-				if (element.x <= min.x) {
+				if (element.getX() <= min.getX()) {
 					next = min;
 					min = element;
-				} else if (element.x <= min.x) {
+				} else if (element.getX() <= min.getX()) {
 					next = element;
 				}
 			}
 
-			if (min.x == next.x && min != next) {
-				min.x--;
-				System.out.println("Moved point: " + next.x + " -> " + min.x);
+			if (min.getX() == next.getX() && min != next) {
+				min.setX(min.getX() - 1);
+				System.out.println("Moved point: " + next.getX() + " -> "
+						+ min.getX());
 			}
 		}
 	}
@@ -71,17 +72,17 @@ public class Voronoi
 	{
 		edges.clear();
 	}
-	
+
 	public void addSite(Point site)
 	{
 		sites.add(site);
 	}
-	
+
 	public Point getSite(int i)
 	{
 		return sites.get(i);
 	}
-	
+
 	public int getNumberOfSites()
 	{
 		return sites.size();

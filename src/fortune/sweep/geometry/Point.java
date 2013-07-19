@@ -1,10 +1,5 @@
 package fortune.sweep.geometry;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
 import java.awt.Graphics;
 
 import fortune.sweep.Paintable;
@@ -12,12 +7,12 @@ import fortune.sweep.Paintable;
 public class Point implements Paintable
 {
 
-	public volatile double x, y;
+	protected double x, y;
 
-	public Point(double d, double d1)
+	public Point(double x, double y)
 	{
-		x = d;
-		y = d1;
+		this.x = x;
+		this.y = y;
 	}
 
 	public Point(Point point)
@@ -25,11 +20,25 @@ public class Point implements Paintable
 		x = point.x;
 		y = point.y;
 	}
-
-	public Point(java.awt.Point point)
+	
+	public double getX()
 	{
-		x = point.x;
-		y = point.y;
+		return x;
+	}
+	
+	public double getY()
+	{
+		return y;
+	}
+	
+	public void setX(double x)
+	{
+		this.x = x;
+	}
+	
+	public void setY(double y)
+	{
+		this.y = y;
 	}
 
 	public void paint(Graphics g)

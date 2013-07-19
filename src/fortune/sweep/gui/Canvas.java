@@ -77,10 +77,10 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 	{
 	}
 
-	public synchronized void mousePressed(MouseEvent mouseevent)
+	public synchronized void mousePressed(MouseEvent e)
 	{
-		Point point = new Point(mouseevent.getPoint());
-		if (point.x > (double) xPos) {
+		Point point = new Point(e.getPoint().x, e.getPoint().y);
+		if (point.getX() > (double) xPos) {
 			voronoi.addSite(point);
 			voronoi.checkDegenerate();
 			events.insert(new EventPoint(point));
@@ -125,12 +125,12 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 
 	public synchronized boolean singlestep()
 	{
-		if (events.events == null || (double) xPos < events.events.x)
+		if (events.events == null || (double) xPos < events.events.getX())
 			xPos++;
 
-		while (events.events != null && (double) xPos >= events.events.x) {
+		while (events.events != null && (double) xPos >= events.events.getX()) {
 			EventPoint eventpoint = events.pop();
-			xPos = Math.max(xPos, (int) eventpoint.x);
+			xPos = Math.max(xPos, (int) eventpoint.getX());
 			eventpoint.action(this);
 			arcs.checkBounds(this, xPos);
 		}
@@ -146,7 +146,7 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 	{
 		EventPoint eventpoint = events.pop();
 		if (eventpoint != null) {
-			xPos = Math.max(xPos, (int) eventpoint.x);
+			xPos = Math.max(xPos, (int) eventpoint.getX());
 			eventpoint.action(this);
 		} else if (xPos < getBounds().width) {
 			xPos = getBounds().width;
@@ -170,12 +170,12 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 		initGraphics();
 		repaint();
 	}
-	
+
 	public Voronoi getVoronoi()
 	{
 		return voronoi;
 	}
-	
+
 	public Delaunay getDelaunay()
 	{
 		return delaunay;
@@ -185,12 +185,12 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 	{
 		return events;
 	}
-	
+
 	public ArcTree getArcs()
 	{
 		return arcs;
 	}
-	
+
 	public int getXPos()
 	{
 		return xPos;
