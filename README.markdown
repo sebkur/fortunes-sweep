@@ -13,7 +13,7 @@ Permission to copy, use, modify, sell and distribute this software is granted. T
 # Building and Running
 ant compile
 
-java -cp bin fortune.sweep.Fortune
+java -cp bin fortune.sweep.gui.swing.SwingFortune
 
 # Notes
 

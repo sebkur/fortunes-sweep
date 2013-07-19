@@ -24,6 +24,11 @@ public class AwtPainter implements Painter
 	{
 		this.g = g;
 	}
+	
+	public void setGraphics(Graphics g)
+	{
+		this.g = g;
+	}
 
 	@Override
 	public void setColor(Color color)

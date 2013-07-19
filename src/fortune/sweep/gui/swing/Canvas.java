@@ -1,6 +1,5 @@
 package fortune.sweep.gui.swing;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,7 +9,8 @@ import javax.swing.JPanel;
 import fortune.sweep.Algorithm;
 import fortune.sweep.AlgorithmWatcher;
 import fortune.sweep.geometry.Point;
-import fortune.sweep.gui.Painter;
+import fortune.sweep.gui.AlgorithmPainter;
+import fortune.sweep.gui.Config;
 
 public class Canvas extends JPanel implements AlgorithmWatcher
 {
@@ -18,17 +18,15 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 	private static final long serialVersionUID = 461591430129084653L;
 
 	private Algorithm algorithm;
+	private AlgorithmPainter algorithmPainter;
+	private AwtPainter painter;
 
-	private boolean drawCircles, drawBeach, drawVoronoiLines, drawDelaunay;
-
-	public Canvas(Algorithm algorithm, int width, int height)
+	public Canvas(Algorithm algorithm, Config config, int width, int height)
 	{
 		this.algorithm = algorithm;
 
-		drawCircles = false;
-		drawBeach = true;
-		drawVoronoiLines = true;
-		drawDelaunay = false;
+		painter = new AwtPainter(null);
+		algorithmPainter = new AlgorithmPainter(algorithm, config, painter);
 
 		addMouseListener(new MouseAdapter() {
 
@@ -45,76 +43,18 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 		});
 	}
 
-	public boolean isDrawCircles()
-	{
-		return drawCircles;
-	}
-
-	public void setDrawCircles(boolean drawCircles)
-	{
-		this.drawCircles = drawCircles;
-	}
-
-	public boolean isDrawBeach()
-	{
-		return drawBeach;
-	}
-
-	public void setDrawBeach(boolean drawBeach)
-	{
-		this.drawBeach = drawBeach;
-	}
-
-	public boolean isDrawVoronoiLines()
-	{
-		return drawVoronoiLines;
-	}
-
-	public void setDrawVoronoiLines(boolean drawVoronoiLines)
-	{
-		this.drawVoronoiLines = drawVoronoiLines;
-	}
-
-	public boolean isDrawDelaunay()
-	{
-		return drawDelaunay;
-	}
-
-	public void setDrawDelaunay(boolean drawDelaunay)
-	{
-		this.drawDelaunay = drawDelaunay;
-	}
-
-	public synchronized void paintComponent(Graphics g)
-	{
-		Painter drawer = new AwtPainter(g);
-
-		drawer.setColor(Color.white);
-		drawer.fillRect(0, 0, getBounds().width, getBounds().height);
-		drawer.setColor(Color.blue);
-		drawer.paint(algorithm.getVoronoi(), drawVoronoiLines);
-		drawer.setColor(Color.red);
-		drawer.drawLine(algorithm.getPosX(), 0, algorithm.getPosX(),
-				getBounds().height);
-		if (algorithm.getEventQueue() != null && algorithm.getArcs() != null) {
-			drawer.setColor(Color.black);
-			drawer.paint(algorithm.getEventQueue(), drawCircles);
-			if (algorithm.getArcs().getArcs() != null) {
-				algorithm.getArcs().getArcs().init(algorithm.getPosX());
-				drawer.paint(algorithm.getArcs().getArcs(),
-						algorithm.getPosX(), 0.0D, drawVoronoiLines, drawBeach);
-			}
-		}
-		if (drawDelaunay) {
-			drawer.setColor(Color.gray);
-			drawer.paint(algorithm.getDelaunay());
-		}
-	}
-
 	@Override
 	public void update()
 	{
 		repaint();
+	}
+
+	public void paintComponent(Graphics g)
+	{
+		painter.setGraphics(g);
+		algorithmPainter.setWidth(getWidth());
+		algorithmPainter.setHeight(getHeight());
+		algorithmPainter.paint();
 	}
 
 }

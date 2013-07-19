@@ -6,12 +6,15 @@ import java.awt.event.ItemListener;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import fortune.sweep.gui.Config;
+
 public class Settings extends JPanel implements ItemListener
 {
 
 	private static final long serialVersionUID = -6537449209660520005L;
 
 	private Canvas canvas;
+	private Config config;
 
 	private JCheckBox[] boxes;
 
@@ -20,9 +23,10 @@ public class Settings extends JPanel implements ItemListener
 	private static final String TEXT_VORONOI = "Voronoi diagram";
 	private static final String TEXT_DELAUNAY = "Delaunay triangulation";
 
-	public Settings(Canvas canvas)
+	public Settings(Canvas canvas, Config config)
 	{
 		this.canvas = canvas;
+		this.config = config;
 		String as[] = { TEXT_CIRCLES, TEXT_BEACHLINE, TEXT_VORONOI,
 				TEXT_DELAUNAY };
 
@@ -43,13 +47,13 @@ public class Settings extends JPanel implements ItemListener
 		String s = box.getText();
 		boolean flag = box.isSelected();
 		if (s.equals(TEXT_CIRCLES)) {
-			canvas.setDrawCircles(flag);
+			config.setDrawCircles(flag);
 		} else if (s.equals(TEXT_BEACHLINE)) {
-			canvas.setDrawBeach(flag);
+			config.setDrawBeach(flag);
 		} else if (s.equals(TEXT_VORONOI)) {
-			canvas.setDrawVoronoiLines(flag);
+			config.setDrawVoronoiLines(flag);
 		} else if (s.equals(TEXT_DELAUNAY)) {
-			canvas.setDrawDelaunay(flag);
+			config.setDrawDelaunay(flag);
 		}
 		canvas.repaint();
 	}

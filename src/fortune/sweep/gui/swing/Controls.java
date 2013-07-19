@@ -7,14 +7,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import fortune.sweep.Algorithm;
-import fortune.sweep.Fortune;
 
 public class Controls extends Panel implements ActionListener
 {
 
 	private static final long serialVersionUID = -8452143409724541737L;
 
-	private Fortune fortune;
+	private SwingFortune fortune;
 
 	private Algorithm algorithm;
 
@@ -27,7 +26,7 @@ public class Controls extends Panel implements ActionListener
 	private static String TEXT_CLEAR = "Clear";
 	private static String TEXT_RESTART = "Restart";
 
-	public Controls(Fortune fortune, Algorithm algorithm)
+	public Controls(SwingFortune fortune, Algorithm algorithm)
 	{
 		this.fortune = fortune;
 		this.algorithm = algorithm;
