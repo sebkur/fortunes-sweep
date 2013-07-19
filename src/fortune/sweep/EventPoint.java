@@ -4,15 +4,10 @@ import fortune.sweep.arc.CirclePoint;
 import fortune.sweep.geometry.Point;
 import fortune.sweep.gui.Canvas;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
 public class EventPoint extends Point
 {
 
-	EventPoint prev, next;
+	private EventPoint prev, next;
 
 	public EventPoint(Point point)
 	{
@@ -24,9 +19,30 @@ public class EventPoint extends Point
 		super(d, d1);
 	}
 
+	public EventPoint getNext()
+	{
+		return next;
+	}
+
+	public EventPoint getPrevious()
+	{
+		return prev;
+	}
+
+	public void setPrevious(EventPoint prev)
+	{
+		this.prev = prev;
+	}
+
+	public void setNext(EventPoint next)
+	{
+		this.next = next;
+	}
+
 	public void insert(EventPoint eventpoint)
 	{
-		if (eventpoint.x > x || eventpoint.x == x && eventpoint.y > y) {
+		if (eventpoint.getX() > getX() || eventpoint.getX() == getX()
+				&& eventpoint.getY() > getY()) {
 			if (next != null) {
 				next.insert(eventpoint);
 				return;
@@ -36,7 +52,7 @@ public class EventPoint extends Point
 				return;
 			}
 		}
-		if (eventpoint.x != x || eventpoint.y != y
+		if (eventpoint.getX() != getX() || eventpoint.getY() != getY()
 				|| (eventpoint instanceof CirclePoint)) {
 			eventpoint.prev = prev;
 			eventpoint.next = this;

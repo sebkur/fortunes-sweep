@@ -12,7 +12,7 @@ public class Settings extends JPanel implements ItemListener
 	private static final long serialVersionUID = -6537449209660520005L;
 
 	private Canvas canvas;
-	
+
 	private JCheckBox[] boxes;
 
 	private static final String TEXT_CIRCLES = "Circles";
@@ -43,13 +43,13 @@ public class Settings extends JPanel implements ItemListener
 		String s = box.getText();
 		boolean flag = box.isSelected();
 		if (s.equals(TEXT_CIRCLES)) {
-			canvas.drawCircles = flag;
+			canvas.setDrawCircles(flag);
 		} else if (s.equals(TEXT_BEACHLINE)) {
-			canvas.drawBeach = flag;
+			canvas.setDrawBeach(flag);
 		} else if (s.equals(TEXT_VORONOI)) {
-			canvas.drawVoronoiLines = flag;
+			canvas.setDrawVoronoiLines(flag);
 		} else if (s.equals(TEXT_DELAUNAY)) {
-			canvas.drawDelaunay = flag;
+			canvas.setDrawDelaunay(flag);
 		}
 		canvas.repaint();
 	}

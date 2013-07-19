@@ -1,59 +1,49 @@
 package fortune.sweep;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
-import java.awt.Graphics;
-
-import fortune.sweep.arc.CirclePoint;
-
 public class EventQueue
 {
 
-	public EventPoint events;
+	private EventPoint events;
+
+	public EventPoint getEvents()
+	{
+		return events;
+	}
 
 	public void insert(EventPoint p)
 	{
-		if (events != null)
+		if (events != null) {
 			events.insert(p);
+		}
 
-		if (p.prev == null)
+		if (p.getPrevious() == null) {
 			events = p;
+		}
 	}
 
 	public void remove(EventPoint eventpoint)
 	{
-		if (eventpoint.next != null)
-			eventpoint.next.prev = eventpoint.prev;
+		if (eventpoint.getNext() != null) {
+			eventpoint.getNext().setPrevious(eventpoint.getPrevious());
+		}
 
-		if (eventpoint.prev != null)
-			eventpoint.prev.next = eventpoint.next;
-		else
-			events = eventpoint.next;
+		if (eventpoint.getPrevious() != null) {
+			eventpoint.getPrevious().setNext(eventpoint.getNext());
+		} else {
+			events = eventpoint.getNext();
+		}
 	}
 
 	public EventPoint pop()
 	{
 		EventPoint eventpoint = events;
 		if (eventpoint != null) {
-			events = events.next;
+			events = events.getNext();
 			if (events != null) {
-				events.prev = null;
+				events.setPrevious(null);
 			}
 		}
 		return eventpoint;
-	}
-
-	public void paint(Graphics g, boolean flag)
-	{
-		for (EventPoint eventpoint = events; eventpoint != null; eventpoint = eventpoint.next) {
-			if (flag || !(eventpoint instanceof CirclePoint)) {
-				eventpoint.paint(g);
-			}
-		}
-
 	}
 
 }

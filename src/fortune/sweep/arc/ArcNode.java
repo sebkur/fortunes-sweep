@@ -1,11 +1,5 @@
 package fortune.sweep.arc;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
-import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import fortune.sweep.EventQueue;
@@ -15,13 +9,53 @@ import fortune.sweep.gui.Canvas;
 
 public class ArcNode extends ParabolaPoint
 {
-	ArcNode next, prev;
-	CirclePoint circlePoint;
-	Point startOfTrace;
+	private ArcNode next, prev;
+	private CirclePoint circlePoint;
+	private Point startOfTrace;
 
 	public ArcNode(Point point)
 	{
 		super(point);
+	}
+
+	public ArcNode getNext()
+	{
+		return next;
+	}
+
+	public ArcNode getPrevious()
+	{
+		return prev;
+	}
+
+	public void setPrevious(ArcNode prev)
+	{
+		this.prev = prev;
+	}
+
+	public void setNext(ArcNode next)
+	{
+		this.next = next;
+	}
+
+	public Point getStartOfTrace()
+	{
+		return startOfTrace;
+	}
+
+	public CirclePoint getCirclePoint()
+	{
+		return circlePoint;
+	}
+
+	public void setCirclePoint(CirclePoint circlePoint)
+	{
+		this.circlePoint = circlePoint;
+	}
+
+	public void setStartOfTrace(Point startOfTrace)
+	{
+		this.startOfTrace = startOfTrace;
 	}
 
 	public void checkCircle(EventQueue eventqueue)
@@ -45,7 +79,7 @@ public class ArcNode extends ParabolaPoint
 	{
 		if (startOfTrace != null) {
 			canvas.getVoronoi().addLine(new Edge(startOfTrace, point));
-			canvas.getDelaunay().addElement(new Edge(this, next));
+			canvas.getDelaunay().add(new Edge(this, next));
 			startOfTrace = null;
 		}
 	}
@@ -54,12 +88,12 @@ public class ArcNode extends ParabolaPoint
 	{
 		if (next != null) {
 			next.init(d);
-			if (d > next.x && d > x && startOfTrace != null) {
+			if (d > next.getX() && d > getX() && startOfTrace != null) {
 				try {
-					double ad[] = solveQuadratic(a - next.a, b - next.b, c
-							- next.c);
+					double ad[] = solveQuadratic(getA() - next.getA(), getB()
+							- next.getB(), getC() - next.getC());
 					double d1 = ad[0];
-					double d2 = d - F(d1);
+					double d2 = d - f(d1);
 					Rectangle rectangle = canvas.getBounds();
 					if (d2 < startOfTrace.getX() && d2 < 0.0D || d1 < 0.0D
 							|| d2 >= (double) rectangle.width
@@ -79,8 +113,9 @@ public class ArcNode extends ParabolaPoint
 		boolean split = true;
 		if (next != null) {
 			next.init(sline);
-			if (sline > next.x && sline > x) {
-				double xs[] = solveQuadratic(a - next.a, b - next.b, c - next.c);
+			if (sline > next.getX() && sline > getX()) {
+				double xs[] = solveQuadratic(getA() - next.getA(), getB()
+						- next.getB(), getC() - next.getC());
 				if (xs[0] <= parabolapoint.realX() && xs[0] != xs[1])
 					split = false;
 			} else {
@@ -106,76 +141,13 @@ public class ArcNode extends ParabolaPoint
 			next.next.checkCircle(eventqueue);
 
 			next.next.startOfTrace = startOfTrace;
-			startOfTrace = new Point(sline - F(parabolapoint.getY()),
+			startOfTrace = new Point(sline - f(parabolapoint.getY()),
 					parabolapoint.getY());
-			next.startOfTrace = new Point(sline - F(parabolapoint.getY()),
+			next.startOfTrace = new Point(sline - f(parabolapoint.getY()),
 					parabolapoint.getY());
 		} else {
 			next.insert(parabolapoint, sline, eventqueue);
 		}
-	}
-
-	public void paint(Graphics g, double d, double d1, boolean flag,
-			boolean drawBeach)
-	{
-		double d2 = g.getClipBounds().height;
-		ArcNode arcnode = next;
-		if (arcnode != null) {
-			arcnode.init(d);
-		}
-		if (d == x) {
-			double d3 = arcnode != null ? d - arcnode.F(y) : 0.0D;
-			if (drawBeach)
-				g.drawLine((int) d3, (int) y, (int) d, (int) y);
-			d2 = y;
-		} else {
-			if (arcnode != null) {
-				if (d == arcnode.x) {
-					d2 = arcnode.y;
-				} else {
-					try {
-						double ad[] = solveQuadratic(a - arcnode.a, b
-								- arcnode.b, c - arcnode.c);
-						d2 = ad[0];
-					} catch (Throwable _ex) {
-						d2 = d1;
-						System.out
-								.println("*** error: No parabola intersection during ArcNode.paint() - SLine: "
-										+ d
-										+ ", "
-										+ toString()
-										+ " "
-										+ arcnode.toString());
-					}
-				}
-			}
-
-			if (drawBeach) {
-				int i = 1;
-				double d4 = 0.0D;
-				for (double d5 = d1; d5 < Math.min(Math.max(0.0D, d2),
-						g.getClipBounds().height); d5 += i) {
-					double d6 = d - F(d5);
-					if (d5 > d1 && (d4 >= 0.0D || d6 >= 0.0D)) {
-						g.drawLine((int) d4, (int) (d5 - (double) i), (int) d6,
-								(int) d5);
-					}
-					d4 = d6;
-				}
-			}
-
-			if (flag && startOfTrace != null) {
-				double d7 = d - F(d2);
-				double d8 = d2;
-				g.getClipBounds();
-				g.getClipBounds();
-				g.drawLine((int) startOfTrace.getX(), (int) startOfTrace.getY(),
-						(int) d7, (int) d8);
-			}
-		}
-
-		if (next != null)
-			next.paint(g, d, Math.max(0.0D, d2), flag, drawBeach);
 	}
 
 }

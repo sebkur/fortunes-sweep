@@ -1,15 +1,12 @@
 package fortune.sweep.gui;
 
-// Decompiled by Jad v1.5.7c. Copyright 1997-99 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
-// Decompiler options: packfields(5) packimports(3) nocasts braces 
-// Source File Name:   Fortune.java
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
+import javax.swing.JPanel;
 
 import fortune.sweep.Delaunay;
 import fortune.sweep.EventPoint;
@@ -17,20 +14,22 @@ import fortune.sweep.EventQueue;
 import fortune.sweep.Voronoi;
 import fortune.sweep.arc.ArcTree;
 import fortune.sweep.geometry.Point;
+import fortune.sweep.paint.AwtPainter;
 
-public class Canvas extends java.awt.Canvas implements MouseListener
+public class Canvas extends JPanel
 {
 
 	private static final long serialVersionUID = 461591430129084653L;
 
-	Graphics offScreenGraphics;
-	Image offScreenImage;
-	int xPos;
-	Voronoi voronoi;
-	Delaunay delaunay;
-	boolean drawCircles, drawBeach, drawVoronoiLines, drawDelaunay;
-	EventQueue events;
-	ArcTree arcs;
+	private Graphics offScreenGraphics;
+	private Image offScreenImage;
+	private int xPos;
+	private Voronoi voronoi;
+	private Delaunay delaunay;
+	private boolean drawCircles, drawBeach, drawVoronoiLines, drawDelaunay;
+
+	private EventQueue events;
+	private ArcTree arcs;
 
 	public Canvas(int i, int j, int k)
 	{
@@ -38,9 +37,65 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 		drawBeach = true;
 		drawVoronoiLines = true;
 		drawDelaunay = false;
-		addMouseListener(this);
+
 		voronoi = new Voronoi(i, j, k);
 		init();
+
+		addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				Point point = new Point(e.getPoint().x, e.getPoint().y);
+				if (point.getX() > (double) xPos) {
+					voronoi.addSite(point);
+					voronoi.checkDegenerate();
+					events.insert(new EventPoint(point));
+					repaint();
+				}
+			}
+
+		});
+	}
+
+	public boolean isDrawCircles()
+	{
+		return drawCircles;
+	}
+
+	public void setDrawCircles(boolean drawCircles)
+	{
+		this.drawCircles = drawCircles;
+	}
+
+	public boolean isDrawBeach()
+	{
+		return drawBeach;
+	}
+
+	public void setDrawBeach(boolean drawBeach)
+	{
+		this.drawBeach = drawBeach;
+	}
+
+	public boolean isDrawVoronoiLines()
+	{
+		return drawVoronoiLines;
+	}
+
+	public void setDrawVoronoiLines(boolean drawVoronoiLines)
+	{
+		this.drawVoronoiLines = drawVoronoiLines;
+	}
+
+	public boolean isDrawDelaunay()
+	{
+		return drawDelaunay;
+	}
+
+	public void setDrawDelaunay(boolean drawDelaunay)
+	{
+		this.drawDelaunay = drawDelaunay;
 	}
 
 	public synchronized void init()
@@ -61,49 +116,28 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 		offScreenGraphics = offScreenImage.getGraphics();
 	}
 
-	public void mouseClicked(MouseEvent mouseevent)
-	{
-	}
-
-	public void mouseReleased(MouseEvent mouseevent)
-	{
-	}
-
-	public void mouseEntered(MouseEvent mouseevent)
-	{
-	}
-
-	public void mouseExited(MouseEvent mouseevent)
-	{
-	}
-
-	public synchronized void mousePressed(MouseEvent e)
-	{
-		Point point = new Point(e.getPoint().x, e.getPoint().y);
-		if (point.getX() > (double) xPos) {
-			voronoi.addSite(point);
-			voronoi.checkDegenerate();
-			events.insert(new EventPoint(point));
-			repaint();
-		}
-	}
-
 	public synchronized void paint(Graphics g)
 	{
+		AwtPainter drawer = new AwtPainter(g);
+
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getBounds().width, getBounds().height);
 		g.setColor(Color.blue);
-		voronoi.paint(g, drawVoronoiLines);
+		drawer.paint(voronoi, drawVoronoiLines);
 		g.setColor(Color.red);
 		g.drawLine(xPos, 0, xPos, getBounds().height);
 		if (events != null && arcs != null) {
 			g.setColor(Color.black);
-			events.paint(g, drawCircles);
-			arcs.paint(g, xPos, drawVoronoiLines, drawBeach);
+			drawer.paint(events, drawCircles);
+			if (arcs.getArcs() != null) {
+				arcs.getArcs().init(xPos);
+				drawer.paint(arcs.getArcs(), xPos, 0.0D, drawVoronoiLines,
+						drawBeach);
+			}
 		}
 		if (drawDelaunay) {
 			g.setColor(Color.gray);
-			delaunay.paint(g);
+			drawer.paint(delaunay);
 		}
 	}
 
@@ -125,21 +159,23 @@ public class Canvas extends java.awt.Canvas implements MouseListener
 
 	public synchronized boolean singlestep()
 	{
-		if (events.events == null || (double) xPos < events.events.getX())
+		if (events.getEvents() == null
+				|| (double) xPos < events.getEvents().getX())
 			xPos++;
 
-		while (events.events != null && (double) xPos >= events.events.getX()) {
+		while (events.getEvents() != null
+				&& (double) xPos >= events.getEvents().getX()) {
 			EventPoint eventpoint = events.pop();
 			xPos = Math.max(xPos, (int) eventpoint.getX());
 			eventpoint.action(this);
 			arcs.checkBounds(this, xPos);
 		}
 
-		if (xPos > getBounds().width && events.events == null)
+		if (xPos > getBounds().width && events.getEvents() == null)
 			arcs.checkBounds(this, xPos);
 
 		repaint();
-		return events.events != null || xPos < 1000 + getBounds().width;
+		return events.getEvents() != null || xPos < 1000 + getBounds().width;
 	}
 
 	public synchronized void step()
