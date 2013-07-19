@@ -89,15 +89,15 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 	{
 		Painter drawer = new AwtPainter(g);
 
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getBounds().width, getBounds().height);
-		g.setColor(Color.blue);
+		drawer.setColor(Color.white);
+		drawer.fillRect(0, 0, getBounds().width, getBounds().height);
+		drawer.setColor(Color.blue);
 		drawer.paint(algorithm.getVoronoi(), drawVoronoiLines);
-		g.setColor(Color.red);
-		g.drawLine(algorithm.getPosX(), 0, algorithm.getPosX(),
+		drawer.setColor(Color.red);
+		drawer.drawLine(algorithm.getPosX(), 0, algorithm.getPosX(),
 				getBounds().height);
 		if (algorithm.getEventQueue() != null && algorithm.getArcs() != null) {
-			g.setColor(Color.black);
+			drawer.setColor(Color.black);
 			drawer.paint(algorithm.getEventQueue(), drawCircles);
 			if (algorithm.getArcs().getArcs() != null) {
 				algorithm.getArcs().getArcs().init(algorithm.getPosX());
@@ -106,7 +106,7 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 			}
 		}
 		if (drawDelaunay) {
-			g.setColor(Color.gray);
+			drawer.setColor(Color.gray);
 			drawer.paint(algorithm.getDelaunay());
 		}
 	}

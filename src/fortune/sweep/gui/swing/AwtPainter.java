@@ -1,5 +1,6 @@
 package fortune.sweep.gui.swing;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
 
@@ -22,6 +23,24 @@ public class AwtPainter implements Painter
 	public AwtPainter(Graphics g)
 	{
 		this.g = g;
+	}
+
+	@Override
+	public void setColor(Color color)
+	{
+		g.setColor(color);
+	}
+
+	@Override
+	public void fillRect(int x, int y, int width, int height)
+	{
+		g.fillRect(x, y, width, height);
+	}
+
+	@Override
+	public void drawLine(int x1, int y1, int x2, int y2)
+	{
+		g.drawLine(x1, y1, x2, y2);
 	}
 
 	@Override
