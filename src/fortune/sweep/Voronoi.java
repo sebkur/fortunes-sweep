@@ -11,17 +11,8 @@ public class Voronoi
 	private List<Point> sites = new ArrayList<Point>();
 	private List<Edge> edges = new ArrayList<Edge>();
 
-	public Voronoi(int width, int height, int npoints)
+	public Voronoi()
 	{
-		if (npoints > 0) {
-			boolean flag = false;
-			for (int x = 30; x < width; x += width / 8) {
-				int start_y = (flag ^= true) ? 0 : width / 16;
-				for (int y = 30 + start_y; y < height; y += height / 2)
-					sites.add(new Point(x, y));
-			}
-		}
-
 		checkDegenerate();
 	}
 

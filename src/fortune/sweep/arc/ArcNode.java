@@ -1,11 +1,9 @@
 package fortune.sweep.arc;
 
-import java.awt.Rectangle;
-
+import fortune.sweep.Algorithm;
 import fortune.sweep.EventQueue;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
-import fortune.sweep.gui.Canvas;
 
 public class ArcNode extends ParabolaPoint
 {
@@ -75,35 +73,35 @@ public class ArcNode extends ParabolaPoint
 		}
 	}
 
-	public void completeTrace(Canvas canvas, Point point)
+	public void completeTrace(Algorithm algorithm, Point point)
 	{
 		if (startOfTrace != null) {
-			canvas.getVoronoi().addLine(new Edge(startOfTrace, point));
-			canvas.getDelaunay().add(new Edge(this, next));
+			algorithm.getVoronoi().addLine(new Edge(startOfTrace, point));
+			algorithm.getDelaunay().add(new Edge(this, next));
 			startOfTrace = null;
 		}
 	}
 
-	public void checkBounds(Canvas canvas, double d)
+	public void checkBounds(Algorithm algorithm, double x)
 	{
 		if (next != null) {
-			next.init(d);
-			if (d > next.getX() && d > getX() && startOfTrace != null) {
+			next.init(x);
+			if (x > next.getX() && x > getX() && startOfTrace != null) {
 				try {
 					double ad[] = solveQuadratic(getA() - next.getA(), getB()
 							- next.getB(), getC() - next.getC());
 					double d1 = ad[0];
-					double d2 = d - f(d1);
-					Rectangle rectangle = canvas.getBounds();
+					double d2 = x - f(d1);
 					if (d2 < startOfTrace.getX() && d2 < 0.0D || d1 < 0.0D
-							|| d2 >= (double) rectangle.width
-							|| d1 >= (double) rectangle.height)
-						completeTrace(canvas, new Point(d2, d1));
+							|| d2 >= (double) algorithm.getMaxX()
+							|| d1 >= (double) algorithm.getHeight()) {
+						completeTrace(algorithm, new Point(d2, d1));
+					}
 				} catch (Throwable _ex) {
 					System.out.println("*** exception");
 				}
 			}
-			next.checkBounds(canvas, d);
+			next.checkBounds(algorithm, x);
 		}
 	}
 

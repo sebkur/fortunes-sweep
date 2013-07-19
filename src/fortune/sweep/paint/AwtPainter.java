@@ -13,7 +13,7 @@ import fortune.sweep.arc.ParabolaPoint;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 
-public class AwtPainter
+public class AwtPainter implements Painter
 {
 
 	private Graphics g;
@@ -23,11 +23,13 @@ public class AwtPainter
 		this.g = g;
 	}
 
+	@Override
 	public void paint(Point p)
 	{
 		g.fillOval((int) (p.getX() - 3.0), (int) (p.getY() - 3.0), 7, 7);
 	}
 
+	@Override
 	public void paint(Edge e)
 	{
 		Point p1 = e.getStart();
@@ -36,6 +38,7 @@ public class AwtPainter
 				(int) p2.getY());
 	}
 
+	@Override
 	public void paint(Delaunay d)
 	{
 		for (Edge e : d) {
@@ -43,6 +46,7 @@ public class AwtPainter
 		}
 	}
 
+	@Override
 	public void paint(CirclePoint p)
 	{
 		paint((Point) p);
@@ -51,6 +55,7 @@ public class AwtPainter
 				(int) (2D * d), (int) (2D * d));
 	}
 
+	@Override
 	public void paint(ArcNode a, double d, double d1, boolean drawVoronoiLines,
 			boolean drawBeach)
 	{
@@ -118,6 +123,7 @@ public class AwtPainter
 		}
 	}
 
+	@Override
 	public void paint(EventQueue queue, boolean drawCircles)
 	{
 		for (EventPoint eventpoint = queue.getEvents(); eventpoint != null; eventpoint = eventpoint
@@ -132,6 +138,7 @@ public class AwtPainter
 		}
 	}
 
+	@Override
 	public void paint(Voronoi v, boolean drawVoronoiLines)
 	{
 		List<Point> sites = v.getSites();

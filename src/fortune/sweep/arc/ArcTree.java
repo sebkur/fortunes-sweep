@@ -1,8 +1,8 @@
 package fortune.sweep.arc;
 
+import fortune.sweep.Algorithm;
 import fortune.sweep.EventQueue;
 import fortune.sweep.geometry.Point;
-import fortune.sweep.gui.Canvas;
 
 public class ArcTree
 {
@@ -32,11 +32,11 @@ public class ArcTree
 		return arcs;
 	}
 
-	public void checkBounds(Canvas canvas, double d)
+	public void checkBounds(Algorithm algorithm, double x)
 	{
 		if (arcs != null) {
-			arcs.init(d);
-			arcs.checkBounds(canvas, d);
+			arcs.init(x);
+			arcs.checkBounds(algorithm, x);
 		}
 	}
 

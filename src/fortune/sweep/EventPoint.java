@@ -2,7 +2,6 @@ package fortune.sweep;
 
 import fortune.sweep.arc.CirclePoint;
 import fortune.sweep.geometry.Point;
-import fortune.sweep.gui.Canvas;
 
 public class EventPoint extends Point
 {
@@ -69,9 +68,10 @@ public class EventPoint extends Point
 		}
 	}
 
-	public void action(Canvas canvas)
+	public void action(Algorithm algorithm)
 	{
-		canvas.getArcs().insert(this, canvas.getXPos(), canvas.getEventQueue());
+		algorithm.getArcs().insert(this, algorithm.getPosX(),
+				algorithm.getEventQueue());
 	}
 
 }

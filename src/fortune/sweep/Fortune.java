@@ -1,13 +1,15 @@
 package fortune.sweep;
 
 import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import fortune.sweep.gui.Canvas;
-import fortune.sweep.gui.Controls;
-import fortune.sweep.gui.Settings;
+import fortune.sweep.gui.swing.Canvas;
+import fortune.sweep.gui.swing.Controls;
+import fortune.sweep.gui.swing.Settings;
 
 public class Fortune extends JPanel implements Runnable
 {
@@ -27,17 +29,33 @@ public class Fortune extends JPanel implements Runnable
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	private Algorithm algorithm;
 	private Canvas canvas;
 	private Controls controls;
 	private Thread thread;
 
 	public void init()
 	{
+		algorithm = new Algorithm();
+
 		setLayout(new BorderLayout());
-		canvas = new Canvas(getSize().width, getSize().height - 50, 85);
+		canvas = new Canvas(algorithm, getWidth(), getHeight() - 50);
 		add(new Settings(canvas), BorderLayout.NORTH);
 		add(canvas, BorderLayout.CENTER);
-		add(controls = new Controls(this, canvas), BorderLayout.SOUTH);
+		add(controls = new Controls(this, algorithm), BorderLayout.SOUTH);
+
+		algorithm.addWatcher(canvas);
+
+		canvas.addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				algorithm.setMaxX(canvas.getWidth());
+				algorithm.setHeight(canvas.getHeight());
+			}
+
+		});
 	}
 
 	public boolean running = false;
@@ -64,7 +82,7 @@ public class Fortune extends JPanel implements Runnable
 	{
 		if (thread != null) {
 			do {
-				while (canvas.singlestep()) {
+				while (algorithm.singlestep()) {
 					try {
 						Thread.sleep(25L);
 					} catch (InterruptedException _ex) {

@@ -1,4 +1,4 @@
-package fortune.sweep.gui;
+package fortune.sweep.gui.swing;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
