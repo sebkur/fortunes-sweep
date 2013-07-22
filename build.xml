@@ -49,6 +49,15 @@
 		</jar>
 	</target>
 
+	<target name="dist-gwt" depends="compile" description="generate the distribution">
+		<jar jarfile="${dist}/fortune-gwt.jar" basedir="${build}">
+			<fileset dir="${src}">                                         
+				<include name="**/*.java" />                        
+				<include name="**/*.gwt.xml" /> 
+			</fileset> 
+		</jar>
+	</target>
+
 	<target name="clean" description="clean up">
 		<delete dir="${build}" />
 		<delete dir="${dist}" />

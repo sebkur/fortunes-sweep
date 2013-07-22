@@ -84,18 +84,18 @@ public class ParabolaPoint extends Point
 	}
 
 	public static double[] solveQuadratic(double d, double d1, double d2)
-			throws Throwable
+			throws Exception
 	{
 		double ad[] = new double[2];
 		double d3 = d1 * d1 - 4D * d * d2;
 		if (d3 < 0.0D) {
-			throw new Throwable();
+			throw new Exception();
 		}
 		if (d == 0.0D) {
 			if (d1 != 0.0D) {
 				ad[0] = -d2 / d1;
 			} else {
-				throw new Throwable();
+				throw new Exception();
 			}
 		} else {
 			double d4 = Math.sqrt(d3);

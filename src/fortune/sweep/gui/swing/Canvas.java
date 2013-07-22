@@ -34,7 +34,7 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 			public void mousePressed(MouseEvent e)
 			{
 				Point point = new Point(e.getPoint().x, e.getPoint().y);
-				if (point.getX() > (double) Canvas.this.algorithm.getPosX()) {
+				if (point.getX() > (double) Canvas.this.algorithm.getSweepX()) {
 					Canvas.this.algorithm.addSite(point);
 					repaint();
 				}

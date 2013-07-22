@@ -47,7 +47,7 @@ public class Algorithm
 		this.height = height;
 	}
 
-	public int getPosX()
+	public int getSweepX()
 	{
 		return xPos;
 	}

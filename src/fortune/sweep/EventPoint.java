@@ -70,7 +70,7 @@ public class EventPoint extends Point
 
 	public void action(Algorithm algorithm)
 	{
-		algorithm.getArcs().insert(this, algorithm.getPosX(),
+		algorithm.getArcs().insert(this, algorithm.getSweepX(),
 				algorithm.getEventQueue());
 	}
 
