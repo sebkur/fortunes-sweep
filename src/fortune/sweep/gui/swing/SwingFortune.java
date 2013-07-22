@@ -82,6 +82,15 @@ public class SwingFortune extends JPanel implements Runnable
 		}
 		return running;
 	}
+	
+	public void stopRunning()
+	{
+		if (!running) {
+			return;
+		}
+		running = false;
+		thread.suspend();
+	}
 
 	public void run()
 	{

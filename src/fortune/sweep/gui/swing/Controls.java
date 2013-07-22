@@ -54,6 +54,7 @@ public class Controls extends Panel implements ActionListener
 			algorithm.singlestep();
 			return;
 		} else if (e.getSource() == buttons[3]) {
+			fortune.stopRunning();
 			threadRunning(false);
 			algorithm.clear();
 			return;
