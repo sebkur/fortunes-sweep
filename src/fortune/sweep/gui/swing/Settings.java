@@ -37,8 +37,10 @@ public class Settings extends JPanel implements ItemListener
 			add(boxes[i]);
 		}
 
-		boxes[1].setSelected(true);
-		boxes[2].setSelected(true);
+		boxes[0].setSelected(config.isDrawCircles());
+		boxes[1].setSelected(config.isDrawBeach());
+		boxes[2].setSelected(config.isDrawVoronoiLines());
+		boxes[3].setSelected(config.isDrawDelaunay());
 	}
 
 	public void itemStateChanged(ItemEvent e)
