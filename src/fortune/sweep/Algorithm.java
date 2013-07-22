@@ -142,8 +142,6 @@ public class Algorithm
 			eventpoint.action(this);
 		} else if (xPos < maxX) {
 			xPos = maxX;
-		} else {
-			init();
 		}
 		arcs.checkBounds(this, xPos);
 		notifyWatchers();
