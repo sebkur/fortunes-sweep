@@ -58,7 +58,7 @@ public class SwingFortune extends JPanel implements Runnable
 		});
 	}
 
-	public boolean running = false;
+	private boolean running = false;
 
 	public boolean toggleRunning()
 	{
