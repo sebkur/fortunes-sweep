@@ -38,6 +38,11 @@ public class SwingFortune extends JPanel implements Runnable
 		algorithm = new Algorithm();
 		Config config = new Config();
 
+		config.setDrawCircles(true);
+		config.setDrawBeach(true);
+		config.setDrawVoronoiLines(true);
+		config.setDrawDelaunay(false);
+
 		setLayout(new BorderLayout());
 		canvas = new Canvas(algorithm, config, getWidth(), getHeight() - 50);
 		add(new Settings(canvas, config), BorderLayout.NORTH);
