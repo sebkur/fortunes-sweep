@@ -55,22 +55,31 @@ public class AlgorithmPainter
 	}
 
 	private int colorBackground = 0xffffff;
-	private int colorVornoiSegments = 0x0000ff;
 	private int colorSweepline = 0xff0000;
+
+	private int colorSites = 0x000000;
+	private int colorSitesVisited = 0x666666;
+	private int colorCircleEventPoints = 0x00ff00;
+	private int colorBeachlineIntersections = 0x00ff00;
+	private int colorSpikeIntersections = 0x0000ff;
+
+	private int colorVornoiSegments = 0x0000ff;
 	private int colorArcs = 0x000000;
+	private int colorCircles = 0x000000;
 	private int colorDelaunay = 0x999999;
 
 	public void paint()
 	{
 		painter.setColor(new Color(colorBackground));
 		painter.fillRect(0, 0, width, height);
-		painter.setColor(new Color(colorVornoiSegments));
+
 		paint(algorithm.getVoronoi(), config.isDrawVoronoiLines());
+
 		painter.setColor(new Color(colorSweepline));
 		painter.drawLine(algorithm.getSweepX(), 0, algorithm.getSweepX(),
 				height);
+
 		if (algorithm.getEventQueue() != null && algorithm.getArcs() != null) {
-			painter.setColor(new Color(colorArcs));
 			paint(algorithm.getEventQueue(), config.isDrawCircles());
 			if (algorithm.getArcs().getArcs() != null) {
 				algorithm.getArcs().getArcs().init(algorithm.getSweepX());
@@ -78,14 +87,15 @@ public class AlgorithmPainter
 						0.0D, config.isDrawVoronoiLines(), config.isDrawBeach());
 			}
 		}
+
 		if (config.isDrawDelaunay()) {
-			painter.setColor(new Color(colorDelaunay));
 			paint(algorithm.getDelaunay());
 		}
 	}
 
 	public void paint(Delaunay d)
 	{
+		painter.setColor(new Color(colorDelaunay));
 		for (Edge e : d) {
 			painter.paint(e);
 		}
@@ -96,9 +106,12 @@ public class AlgorithmPainter
 		List<Point> sites = v.getSites();
 		List<Edge> edges = v.getEdges();
 
+		painter.setColor(new Color(colorSitesVisited));
 		for (int i = 0; i < sites.size(); i++) {
 			painter.paint(sites.get(i));
 		}
+
+		painter.setColor(new Color(colorVornoiSegments));
 		if (drawVoronoiLines) {
 			for (int i = 0; i < edges.size(); i++) {
 				painter.paint(edges.get(i));
@@ -112,8 +125,16 @@ public class AlgorithmPainter
 				.getNext()) {
 			if (drawCircles || !(eventpoint instanceof CirclePoint)) {
 				if (eventpoint instanceof CirclePoint) {
-					painter.paint((CirclePoint) eventpoint);
+					CirclePoint cp = (CirclePoint) eventpoint;
+
+					painter.setColor(new Color(colorCircles));
+					painter.drawCircle(cp.getX() - cp.getRadius(), cp.getY(),
+							cp.getRadius());
+
+					painter.setColor(new Color(colorCircleEventPoints));
+					painter.paint(eventpoint);
 				} else {
+					painter.setColor(new Color(colorSites));
 					painter.paint(eventpoint);
 				}
 			}
@@ -138,9 +159,8 @@ public class AlgorithmPainter
 			}
 			y2 = arcNode.getY();
 			// snip debug: red dot where spike meets beachline
-			painter.setColor(new Color(0xff0000));
+			painter.setColor(new Color(colorSpikeIntersections));
 			painter.fillCircle((int) beachlineX, (int) arcNode.getY(), 2.5);
-			painter.setColor(new Color(colorArcs));
 			// snap debug
 		} else {
 			if (next != null) {
@@ -167,6 +187,7 @@ public class AlgorithmPainter
 			}
 
 			if (drawBeach) {
+				painter.setColor(new Color(colorArcs));
 				int i = 1;
 				double d4 = 0.0D;
 				for (double d5 = y1; d5 < Math.min(Math.max(0.0D, y2), height); d5 += i) {
@@ -183,13 +204,13 @@ public class AlgorithmPainter
 			if (drawVoronoiLines && startOfTrace != null) {
 				double beachX = sweepX - arcNode.f(y2);
 				double beachY = y2;
+				painter.setColor(new Color(colorVornoiSegments));
 				painter.drawLine((int) startOfTrace.getX(),
 						(int) startOfTrace.getY(), (int) beachX, (int) beachY);
 				// snip debug: green dots where neighboring beachline arcs
 				// intersect
-				painter.setColor(new Color(0x00ff00));
+				painter.setColor(new Color(colorBeachlineIntersections));
 				painter.fillCircle((int) beachX, (int) beachY, 2.5);
-				painter.setColor(new Color(colorArcs));
 				// snap debug
 			}
 		}

@@ -2,7 +2,6 @@ package fortune.sweep.gui.swing;
 
 import java.awt.Graphics;
 
-import fortune.sweep.arc.CirclePoint;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 import fortune.sweep.gui.Color;
@@ -55,14 +54,15 @@ public class AwtPainter implements Painter
 		g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(),
 				(int) p2.getY());
 	}
-
+	
 	@Override
-	public void paint(CirclePoint p)
+	public void drawCircle(double x, double y, double radius)
 	{
-		paint((Point) p);
-		double d = p.getRadius();
-		g.drawOval((int) (p.getX() - 2D * d), (int) (p.getY() - d),
-				(int) (2D * d), (int) (2D * d));
+		double diam = radius * 2;
+		int d = (int) Math.round(diam);
+		int px = (int) Math.round(x - radius);
+		int py = (int) Math.round(y - radius);
+		g.drawOval(px, py, d, d);
 	}
 
 	@Override
