@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -54,12 +55,40 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+
 		painter.setGraphics(g);
 		algorithmPainter.setWidth(getWidth());
 		algorithmPainter.setHeight(getHeight());
 		algorithmPainter.paint();
+	}
+
+	public void addRandomPoints()
+	{
+		int MARGIN = 20;
+		int MINSIZE = 20;
+
+		int sx = algorithm.getSweepX();
+		int width = getWidth() - sx;
+		int marginX = 0;
+		int marginY = 0;
+		if (width >= MARGIN * 2 + MINSIZE) {
+			marginX = MARGIN;
+		}
+		if (getHeight() >= MARGIN * 2 + MINSIZE) {
+			marginY = MARGIN;
+		}
+		if (width <= 0) {
+			return;
+		}
+		Random random = new Random();
+		for (int i = 0; i < 16; i++) {
+			int x = random.nextInt(width - marginX * 2 - 1) + sx + marginX + 1;
+			int y = random.nextInt(getHeight() - marginY * 2) + marginY;
+			algorithm.addSite(new Point(x, y));
+		}
+		update();
 	}
 
 }

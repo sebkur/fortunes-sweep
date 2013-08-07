@@ -1,8 +1,11 @@
 package fortune.sweep.gui.swing;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -22,6 +25,8 @@ public class Settings extends JToolBar implements ItemListener
 	private static final String TEXT_BEACHLINE = "Beachline";
 	private static final String TEXT_VORONOI = "Voronoi diagram";
 	private static final String TEXT_DELAUNAY = "Delaunay triangulation";
+	
+	private static final String TEXT_ADD_RANDOM = "Add random points";
 
 	public Settings(Canvas canvas, Config config)
 	{
@@ -44,6 +49,18 @@ public class Settings extends JToolBar implements ItemListener
 		buttons[1].setSelected(config.isDrawBeach());
 		buttons[2].setSelected(config.isDrawVoronoiLines());
 		buttons[3].setSelected(config.isDrawDelaunay());
+		
+		JButton buttonRandom = new JButton(TEXT_ADD_RANDOM);
+		add(buttonRandom);
+		
+		buttonRandom.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				Settings.this.canvas.addRandomPoints();
+			}
+		});
 	}
 
 	public void itemStateChanged(ItemEvent e)
