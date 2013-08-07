@@ -136,7 +136,7 @@ public class Algorithm
 	
 	public synchronized boolean isFinshed()
 	{
-		return !(events.getEvents() != null || xPos < 10 + maxX);
+		return !(events.getEvents() != null || xPos < 1000 + maxX);
 	}
 
 	public synchronized void step()
