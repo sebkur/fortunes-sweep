@@ -74,27 +74,23 @@ public class AlgorithmPainter
 		painter.setColor(new Color(colorBackground));
 		painter.fillRect(0, 0, width, height);
 
-		paint(algorithm.getVoronoi(), config.isDrawVoronoiLines());
+		paintSitesAndEdges(algorithm.getVoronoi());
 
 		painter.setColor(new Color(colorSweepline));
 		painter.drawLine(algorithm.getSweepX(), 0, algorithm.getSweepX(),
 				height);
 
 		if (algorithm.getEventQueue() != null && algorithm.getArcs() != null) {
-			paint(algorithm.getEventQueue(), config.isDrawCircles());
-			if (algorithm.getArcs().getArcs() != null) {
-				algorithm.getArcs().getArcs().init(algorithm.getSweepX());
-				paint(algorithm.getArcs().getArcs(), algorithm.getSweepX(),
-						0.0D, config.isDrawVoronoiLines(), config.isDrawBeach());
-			}
+			paintEventQueue(algorithm.getEventQueue(), config.isDrawCircles());
+			paintArcs(algorithm.getArcs().getArcs(), algorithm.getSweepX());
 		}
 
 		if (config.isDrawDelaunay()) {
-			paint(algorithm.getDelaunay());
+			paintDelaunay(algorithm.getDelaunay());
 		}
 	}
 
-	public void paint(Delaunay d)
+	private void paintDelaunay(Delaunay d)
 	{
 		painter.setColor(new Color(colorDelaunay));
 		for (Edge e : d) {
@@ -102,7 +98,7 @@ public class AlgorithmPainter
 		}
 	}
 
-	public void paint(Voronoi v, boolean drawVoronoiLines)
+	private void paintSitesAndEdges(Voronoi v)
 	{
 		List<Point> sites = v.getSites();
 		List<Edge> edges = v.getEdges();
@@ -113,14 +109,14 @@ public class AlgorithmPainter
 		}
 
 		painter.setColor(new Color(colorVornoiSegments));
-		if (drawVoronoiLines) {
+		if (config.isDrawVoronoiLines()) {
 			for (int i = 0; i < edges.size(); i++) {
 				painter.paint(edges.get(i));
 			}
 		}
 	}
 
-	public void paint(EventQueue queue, boolean drawCircles)
+	private void paintEventQueue(EventQueue queue, boolean drawCircles)
 	{
 		for (EventPoint eventpoint = queue.getEvents(); eventpoint != null; eventpoint = eventpoint
 				.getNext()) {
@@ -142,87 +138,123 @@ public class AlgorithmPainter
 		}
 	}
 
-	public void paint(ArcNode arcNode, double sweepX, double y1,
-			boolean drawVoronoiLines, boolean drawBeach)
+	private void paintArcs(ArcNode arcNode, double sweepX)
 	{
+		for (ArcNode current = arcNode; current != null; current = current
+				.getNext()) {
+			current.init(sweepX);
+		}
+
+		double y1 = 0.0;
 		double y2 = height;
-		ArcNode next = arcNode.getNext();
-		if (next != null) {
-			next.init(sweepX);
-		}
-		if (sweepX == arcNode.getX()) {
-			// spikes on site events
-			double beachlineX = next != null ? sweepX - next.f(arcNode.getY())
-					: 0.0D;
-			if (drawBeach) {
-				painter.setColor(new Color(colorSpikes));
-				painter.drawLine((int) beachlineX, (int) arcNode.getY(),
-						(int) sweepX, (int) arcNode.getY());
-			}
-			y2 = arcNode.getY();
-			// snip debug: red dot where spike meets beachline
-			painter.setColor(new Color(colorSpikeIntersections));
-			painter.fillCircle((int) beachlineX, (int) arcNode.getY(), 2.5);
-			// snap debug
-		} else {
-			if (next != null) {
-				if (sweepX == next.getX()) {
-					y2 = next.getY();
+
+		for (ArcNode current = arcNode; current != null; current = current
+				.getNext()) {
+			ArcNode next = current.getNext();
+
+			if (sweepX == current.getX()) {
+				// spikes on site events
+				if (config.isDrawBeach()) {
+					paintSpike(sweepX, current, next);
+				}
+				y2 = current.getY();
+			} else {
+				if (next == null) {
+					y2 = height;
 				} else {
-					try {
-						double ad[] = ParabolaPoint.solveQuadratic(
-								arcNode.getA() - next.getA(), arcNode.getB()
-										- next.getB(),
-								arcNode.getC() - next.getC());
-						y2 = ad[0];
-					} catch (Exception e) {
-						y2 = y1;
-						System.out
-								.println("*** error: No parabola intersection during ArcNode.paint() - SLine: "
-										+ sweepX
-										+ ", "
-										+ toString()
-										+ " "
-										+ next.toString());
+					if (sweepX == next.getX()) {
+						y2 = next.getY();
+					} else {
+						try {
+							double ad[] = ParabolaPoint.solveQuadratic(
+									current.getA() - next.getA(),
+									current.getB() - next.getB(),
+									current.getC() - next.getC());
+							y2 = ad[0];
+						} catch (Exception e) {
+							y2 = y1;
+							System.out
+									.println("*** error: No parabola intersection while painting arc - SLine: "
+											+ sweepX
+											+ ", "
+											+ current.toString()
+											+ " "
+											+ next.toString());
+						}
 					}
+				}
+
+				if (config.isDrawBeach()) {
+					paintBeachline(y1, y2, current, sweepX);
+				}
+
+				if (config.isDrawVoronoiLines()) {
+					paintTraces(y2, current, sweepX);
+				}
+
+				if (config.isDrawBeach() || config.isDrawVoronoiLines()) {
+					paintBeachlineIntersections(y2, current, sweepX);
 				}
 			}
 
-			if (drawBeach) {
-				painter.setColor(new Color(colorArcs));
-				int i = 1;
-				double d4 = 0.0D;
-				for (double d5 = y1; d5 < Math.min(Math.max(0.0D, y2), height); d5 += i) {
-					double d6 = sweepX - arcNode.f(d5);
-					if (d5 > y1 && (d4 >= 0.0D || d6 >= 0.0D)) {
-						painter.drawLine((int) d4, (int) (d5 - (double) i),
-								(int) d6, (int) d5);
-					}
-					d4 = d6;
-				}
-			}
-
-			Point startOfTrace = arcNode.getStartOfTrace();
-			if (startOfTrace != null) {
-				double beachX = sweepX - arcNode.f(y2);
-				double beachY = y2;
-				if (drawVoronoiLines) {
-					painter.setColor(new Color(colorVornoiSegments));
-					painter.drawLine((int) startOfTrace.getX(),
-							(int) startOfTrace.getY(), (int) beachX,
-							(int) beachY);
-				}
-				// snip debug: green dots where neighboring beachline arcs
-				// intersect
-				painter.setColor(new Color(colorBeachlineIntersections));
-				painter.fillCircle((int) beachX, (int) beachY, 2.5);
-				// snap debug
-			}
+			y1 = Math.max(0.0D, y2);
 		}
+	}
 
-		if (arcNode.getNext() != null) {
-			paint(arcNode.getNext(), sweepX, Math.max(0.0D, y2),
-					drawVoronoiLines, drawBeach);
+	private void paintSpike(double sweepX, ArcNode current, ArcNode next)
+	{
+		double beachlineX = next != null ? sweepX - next.f(current.getY())
+				: 0.0D;
+		painter.setColor(new Color(colorSpikes));
+		painter.drawLine((int) beachlineX, (int) current.getY(), (int) sweepX,
+				(int) current.getY());
+
+		// snip debug: red dot where spike meets beachline
+		painter.setColor(new Color(colorSpikeIntersections));
+		painter.fillCircle((int) beachlineX, (int) current.getY(), 2.5);
+		// snap debug
+	}
+
+	private void paintBeachline(double y1, double y2, ArcNode current,
+			double sweepX)
+	{
+		painter.setColor(new Color(colorArcs));
+		int i = 1;
+		double d4 = 0.0D;
+		for (double d5 = y1; d5 < Math.min(Math.max(0.0D, y2), height); d5 += i) {
+			double d6 = sweepX - current.f(d5);
+			if (d5 > y1 && (d4 >= 0.0D || d6 >= 0.0D)) {
+				painter.drawLine((int) d4, (int) (d5 - (double) i), (int) d6,
+						(int) d5);
+			}
+			d4 = d6;
+		}
+	}
+
+	private void paintTraces(double y2, ArcNode current, double sweepX)
+	{
+		Point startOfTrace = current.getStartOfTrace();
+		if (startOfTrace != null) {
+			double beachX = sweepX - current.f(y2);
+			double beachY = y2;
+			painter.setColor(new Color(colorVornoiSegments));
+			painter.drawLine((int) startOfTrace.getX(),
+					(int) startOfTrace.getY(), (int) beachX, (int) beachY);
+		}
+	}
+
+	private void paintBeachlineIntersections(double y2, ArcNode current,
+			double sweepX)
+	{
+		Point startOfTrace = current.getStartOfTrace();
+		if (startOfTrace != null) {
+			double beachX = sweepX - current.f(y2);
+			double beachY = y2;
+			// snip debug: green dots where neighboring beachline arcs
+			// intersect
+			painter.setColor(new Color(colorBeachlineIntersections));
+			painter.fillCircle((int) beachX, (int) beachY, 2.5);
+			// snap debug
 		}
 	}
 
