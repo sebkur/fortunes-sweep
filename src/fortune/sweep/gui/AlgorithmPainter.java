@@ -61,6 +61,7 @@ public class AlgorithmPainter
 	private int colorSitesVisited = 0x666666;
 	private int colorCircleEventPoints = 0x00ff00;
 	private int colorBeachlineIntersections = 0x00ff00;
+	private int colorSpikes = 0x000000;
 	private int colorSpikeIntersections = 0x0000ff;
 
 	private int colorVornoiSegments = 0x0000ff;
@@ -154,6 +155,7 @@ public class AlgorithmPainter
 			double beachlineX = next != null ? sweepX - next.f(arcNode.getY())
 					: 0.0D;
 			if (drawBeach) {
+				painter.setColor(new Color(colorSpikes));
 				painter.drawLine((int) beachlineX, (int) arcNode.getY(),
 						(int) sweepX, (int) arcNode.getY());
 			}
