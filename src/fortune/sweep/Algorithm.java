@@ -131,7 +131,12 @@ public class Algorithm
 			arcs.checkBounds(this, xPos);
 
 		notifyWatchers();
-		return events.getEvents() != null || xPos < 1000 + maxX;
+		return !isFinshed();
+	}
+	
+	public synchronized boolean isFinshed()
+	{
+		return !(events.getEvents() != null || xPos < 10 + maxX);
 	}
 
 	public synchronized void step()

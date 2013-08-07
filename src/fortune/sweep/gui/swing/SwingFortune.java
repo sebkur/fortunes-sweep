@@ -31,7 +31,10 @@ public class SwingFortune extends JPanel implements Runnable
 	private Algorithm algorithm;
 	private Canvas canvas;
 	private Controls controls;
+
+	private boolean running = false;
 	private Thread thread;
+	private Object wait = new Object();
 
 	public void init()
 	{
@@ -61,51 +64,67 @@ public class SwingFortune extends JPanel implements Runnable
 			}
 
 		});
-	}
 
-	private boolean running = false;
+		thread = new Thread(this);
+		thread.start();
+	}
 
 	public boolean toggleRunning()
 	{
-		if (!running) {
-			if (thread == null) {
-				thread = new Thread(this);
-				running = true;
-				thread.start();
-			} else {
-				running = true;
-				thread.resume();
-			}
-		} else {
+		if (running) {
 			running = false;
-			thread.suspend();
+		} else {
+			if (!algorithm.isFinshed()) {
+				running = true;
+				synchronized (wait) {
+					wait.notify();
+				}
+			}
 		}
 		return running;
 	}
-	
+
 	public void stopRunning()
 	{
 		if (!running) {
 			return;
 		}
 		running = false;
-		thread.suspend();
 	}
 
 	public void run()
 	{
-		if (thread != null) {
-			do {
-				while (algorithm.singlestep()) {
-					try {
-						Thread.sleep(25L);
-					} catch (InterruptedException _ex) {
-					}
+		while (true) {
+			if (running) {
+				boolean eventsLeft = algorithm.singlestep();
+				if (!eventsLeft) {
+					setPaused();
 				}
-				controls.threadRunning(false);
-			} while (true);
-		} else {
-			return;
+				try {
+					Thread.sleep(25L);
+				} catch (InterruptedException ex) {
+					// ignore
+				}
+			} else {
+				setPaused();
+			}
+		}
+	}
+
+	private void setPaused()
+	{
+		running = false;
+		controls.threadRunning(false);
+		while (true) {
+			try {
+				synchronized (wait) {
+					wait.wait();
+				}
+				controls.threadRunning(true);
+				break;
+			} catch (InterruptedException e) {
+				continue;
+			}
 		}
 	}
 
