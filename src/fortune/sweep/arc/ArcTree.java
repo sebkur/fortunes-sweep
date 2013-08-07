@@ -1,6 +1,5 @@
 package fortune.sweep.arc;
 
-import fortune.sweep.Algorithm;
 import fortune.sweep.EventQueue;
 import fortune.sweep.geometry.Point;
 
@@ -30,14 +29,6 @@ public class ArcTree
 	public ArcNode getArcs()
 	{
 		return arcs;
-	}
-
-	public void checkBounds(Algorithm algorithm, double x)
-	{
-		if (arcs != null) {
-			arcs.init(x);
-			arcs.checkBounds(algorithm, x);
-		}
 	}
 
 }

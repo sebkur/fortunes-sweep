@@ -82,29 +82,6 @@ public class ArcNode extends ParabolaPoint
 		}
 	}
 
-	public void checkBounds(Algorithm algorithm, double x)
-	{
-		if (next != null) {
-			next.init(x);
-			if (x > next.getX() && x > getX() && startOfTrace != null) {
-				try {
-					double ad[] = solveQuadratic(getA() - next.getA(), getB()
-							- next.getB(), getC() - next.getC());
-					double d1 = ad[0];
-					double d2 = x - f(d1);
-					if (d2 < startOfTrace.getX() && d2 < 0.0D || d1 < 0.0D
-							|| d2 >= (double) algorithm.getMaxX()
-							|| d1 >= (double) algorithm.getHeight()) {
-						completeTrace(algorithm, new Point(d2, d1));
-					}
-				} catch (Throwable _ex) {
-					System.out.println("*** exception");
-				}
-			}
-			next.checkBounds(algorithm, x);
-		}
-	}
-
 	public void insert(ParabolaPoint parabolapoint, double sline,
 			EventQueue eventqueue) throws Throwable
 	{

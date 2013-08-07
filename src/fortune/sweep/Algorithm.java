@@ -124,11 +124,7 @@ public class Algorithm
 			EventPoint eventpoint = events.pop();
 			xPos = Math.max(xPos, (int) eventpoint.getX());
 			eventpoint.action(this);
-			arcs.checkBounds(this, xPos);
 		}
-
-		if (xPos > maxX && events.getEvents() == null)
-			arcs.checkBounds(this, xPos);
 
 		notifyWatchers();
 		return !isFinshed();
@@ -148,7 +144,6 @@ public class Algorithm
 		} else if (xPos < maxX) {
 			xPos = maxX;
 		}
-		arcs.checkBounds(this, xPos);
 		notifyWatchers();
 	}
 
