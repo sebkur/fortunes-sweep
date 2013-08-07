@@ -203,12 +203,15 @@ public class AlgorithmPainter
 			}
 
 			Point startOfTrace = arcNode.getStartOfTrace();
-			if (drawVoronoiLines && startOfTrace != null) {
+			if (startOfTrace != null) {
 				double beachX = sweepX - arcNode.f(y2);
 				double beachY = y2;
-				painter.setColor(new Color(colorVornoiSegments));
-				painter.drawLine((int) startOfTrace.getX(),
-						(int) startOfTrace.getY(), (int) beachX, (int) beachY);
+				if (drawVoronoiLines) {
+					painter.setColor(new Color(colorVornoiSegments));
+					painter.drawLine((int) startOfTrace.getX(),
+							(int) startOfTrace.getY(), (int) beachX,
+							(int) beachY);
+				}
 				// snip debug: green dots where neighboring beachline arcs
 				// intersect
 				painter.setColor(new Color(colorBeachlineIntersections));
