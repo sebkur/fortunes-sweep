@@ -215,19 +215,37 @@ public class AlgorithmPainter
 		// snap debug
 	}
 
-	private void paintBeachline(double y1, double y2, ArcNode current,
+	private void paintBeachline(double yTop, double yBottom, ArcNode current,
 			double sweepX)
 	{
 		painter.setColor(new Color(colorArcs));
-		int i = 1;
-		double d4 = 0.0D;
-		for (double d5 = y1; d5 < Math.min(Math.max(0.0D, y2), height); d5 += i) {
-			double d6 = sweepX - current.f(d5);
-			if (d5 > y1 && (d4 >= 0.0D || d6 >= 0.0D)) {
-				painter.drawLine((int) d4, (int) (d5 - (double) i), (int) d6,
-						(int) d5);
+		// y stepping for parabola approximation
+		int yStep = 3;
+		// yMax: clamp y2 between 0 and 'height'
+		double yMax = Math.min(Math.max(0.0D, yBottom), height);
+		// initialize x1 and y1 for yTop
+		double x1 = sweepX - current.f(yTop);
+		double y1 = yTop;
+		// draw at least one segment to avoid gaps in corner cases
+		boolean firstSegment = true;
+		// loop over y values
+		for (double y2 = yTop + yStep; y2 < yMax || firstSegment; y2 += yStep) {
+			firstSegment = false;
+			// make last segment reach the beachline intersection
+			if (y2 + yStep >= yMax) {
+				y2 = yMax;
 			}
-			d4 = d6;
+			double x2 = sweepX - current.f(y2);
+			if (y2 > yTop && (x1 >= 0.0D || x2 >= 0.0D)) {
+				int x1i = (int) Math.round(x1);
+				int x2i = (int) Math.round(x2);
+				int y1i = (int) Math.round(y1);
+				int y2i = (int) Math.round(y2);
+				painter.drawLine(x1i, y1i, x2i, y2i);
+			}
+			// remember coordinates values for the next round
+			x1 = x2;
+			y1 = y2;
 		}
 	}
 
@@ -253,7 +271,9 @@ public class AlgorithmPainter
 			// snip debug: green dots where neighboring beachline arcs
 			// intersect
 			painter.setColor(new Color(colorBeachlineIntersections));
-			painter.fillCircle((int) beachX, (int) beachY, 2.5);
+			int beachXi = (int) Math.round(beachX);
+			int beachYi = (int) Math.round(beachY);
+			painter.fillCircle(beachXi, beachYi, 2.5);
 			// snap debug
 		}
 	}
