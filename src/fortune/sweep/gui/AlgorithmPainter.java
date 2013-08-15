@@ -201,16 +201,15 @@ public class AlgorithmPainter
 		}
 	}
 
-	private void paintSpike(double sweepX, ArcNode current, ArcNode next)
+	private void paintSpike(double sweepX, ArcNode point, ArcNode arc)
 	{
-		double beachlineX = next != null ? sweepX - next.f(current.getY())
-				: 0.0D;
+		double beachlineX = arc != null ? sweepX - arc.f(point.getY()) : 0.0D;
 		painter.setColor(new Color(colorSpikes));
-		painter.drawLine(beachlineX, current.getY(), sweepX, current.getY());
+		painter.drawLine(beachlineX, point.getY(), sweepX, point.getY());
 
 		// snip debug: red dot where spike meets beachline
 		painter.setColor(new Color(colorSpikeIntersections));
-		painter.fillCircle(beachlineX, current.getY(), 2.5);
+		painter.fillCircle(beachlineX, point.getY(), 2.5);
 		// snap debug
 	}
 
@@ -220,7 +219,7 @@ public class AlgorithmPainter
 		painter.setColor(new Color(colorArcs));
 		// y stepping for parabola approximation
 		int yStep = 3;
-		// yMax: clamp y2 between 0 and 'height'
+		// yMax: clamp yBottom between 0 and 'height'
 		double yMax = Math.min(Math.max(0.0D, yBottom), height);
 		// initialize x1 and y1 for yTop
 		double x1 = sweepX - current.f(yTop);
@@ -244,25 +243,23 @@ public class AlgorithmPainter
 		}
 	}
 
-	private void paintTraces(double y2, ArcNode current, double sweepX)
+	private void paintTraces(double beachY, ArcNode current, double sweepX)
 	{
 		Point startOfTrace = current.getStartOfTrace();
 		if (startOfTrace != null) {
-			double beachX = sweepX - current.f(y2);
-			double beachY = y2;
+			double beachX = sweepX - current.f(beachY);
 			painter.setColor(new Color(colorVornoiSegments));
 			painter.drawLine(startOfTrace.getX(), startOfTrace.getY(), beachX,
 					beachY);
 		}
 	}
 
-	private void paintBeachlineIntersections(double y2, ArcNode current,
+	private void paintBeachlineIntersections(double beachY, ArcNode current,
 			double sweepX)
 	{
 		Point startOfTrace = current.getStartOfTrace();
 		if (startOfTrace != null) {
-			double beachX = sweepX - current.f(y2);
-			double beachY = y2;
+			double beachX = sweepX - current.f(beachY);
 			// snip debug: green dots where neighboring beachline arcs
 			// intersect
 			painter.setColor(new Color(colorBeachlineIntersections));

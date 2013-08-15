@@ -116,8 +116,9 @@ public class Algorithm
 	public synchronized boolean singlestep()
 	{
 		if (events.getEvents() == null
-				|| (double) xPos < events.getEvents().getX())
+				|| (double) xPos < events.getEvents().getX()) {
 			xPos++;
+		}
 
 		while (events.getEvents() != null
 				&& (double) xPos >= events.getEvents().getX()) {
@@ -129,7 +130,7 @@ public class Algorithm
 		notifyWatchers();
 		return !isFinshed();
 	}
-	
+
 	public synchronized boolean isFinshed()
 	{
 		return !(events.getEvents() != null || xPos < 1000 + maxX);

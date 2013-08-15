@@ -83,7 +83,7 @@ public class ArcNode extends ParabolaPoint
 	}
 
 	public void insert(ParabolaPoint parabolapoint, double sline,
-			EventQueue eventqueue) throws Throwable
+			EventQueue eventqueue) throws Exception
 	{
 		boolean split = true;
 		if (next != null) {

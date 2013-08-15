@@ -20,7 +20,7 @@ public class ArcTree
 			arcs.init(d);
 			arcs.insert(parabolapoint, d, eventqueue);
 			return;
-		} catch (Throwable _ex) {
+		} catch (Exception e) {
 			System.out
 					.println("*** error: No parabola intersection during ArcTree.insert()");
 		}
