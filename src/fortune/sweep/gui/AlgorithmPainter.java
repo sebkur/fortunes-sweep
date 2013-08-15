@@ -206,12 +206,11 @@ public class AlgorithmPainter
 		double beachlineX = next != null ? sweepX - next.f(current.getY())
 				: 0.0D;
 		painter.setColor(new Color(colorSpikes));
-		painter.drawLine((int) beachlineX, (int) current.getY(), (int) sweepX,
-				(int) current.getY());
+		painter.drawLine(beachlineX, current.getY(), sweepX, current.getY());
 
 		// snip debug: red dot where spike meets beachline
 		painter.setColor(new Color(colorSpikeIntersections));
-		painter.fillCircle((int) beachlineX, (int) current.getY(), 2.5);
+		painter.fillCircle(beachlineX, current.getY(), 2.5);
 		// snap debug
 	}
 
@@ -237,11 +236,7 @@ public class AlgorithmPainter
 			}
 			double x2 = sweepX - current.f(y2);
 			if (y2 > yTop && (x1 >= 0.0D || x2 >= 0.0D)) {
-				int x1i = (int) Math.round(x1);
-				int x2i = (int) Math.round(x2);
-				int y1i = (int) Math.round(y1);
-				int y2i = (int) Math.round(y2);
-				painter.drawLine(x1i, y1i, x2i, y2i);
+				painter.drawLine(x1, y1, x2, y2);
 			}
 			// remember coordinates values for the next round
 			x1 = x2;
@@ -256,8 +251,8 @@ public class AlgorithmPainter
 			double beachX = sweepX - current.f(y2);
 			double beachY = y2;
 			painter.setColor(new Color(colorVornoiSegments));
-			painter.drawLine((int) startOfTrace.getX(),
-					(int) startOfTrace.getY(), (int) beachX, (int) beachY);
+			painter.drawLine(startOfTrace.getX(), startOfTrace.getY(), beachX,
+					beachY);
 		}
 	}
 
@@ -271,9 +266,7 @@ public class AlgorithmPainter
 			// snip debug: green dots where neighboring beachline arcs
 			// intersect
 			painter.setColor(new Color(colorBeachlineIntersections));
-			int beachXi = (int) Math.round(beachX);
-			int beachYi = (int) Math.round(beachY);
-			painter.fillCircle(beachXi, beachYi, 2.5);
+			painter.fillCircle(beachX, beachY, 2.5);
 			// snap debug
 		}
 	}

@@ -35,9 +35,26 @@ public class AwtPainter implements Painter
 	}
 
 	@Override
+	public void fillRect(double x, double y, double width, double height)
+	{
+		int ix = (int) Math.round(x);
+		int iy = (int) Math.round(x);
+		int w = (int) Math.round(x + width - ix);
+		int h = (int) Math.round(y + height - iy);
+		g.fillRect(ix, iy, w, h);
+	}
+
+	@Override
 	public void drawLine(int x1, int y1, int x2, int y2)
 	{
 		g.drawLine(x1, y1, x2, y2);
+	}
+
+	@Override
+	public void drawLine(double x1, double y1, double x2, double y2)
+	{
+		g.drawLine((int) Math.round(x1), (int) Math.round(y1),
+				(int) Math.round(x2), (int) Math.round(y2));
 	}
 
 	@Override
@@ -54,7 +71,7 @@ public class AwtPainter implements Painter
 		g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(),
 				(int) p2.getY());
 	}
-	
+
 	@Override
 	public void drawCircle(double x, double y, double radius)
 	{
@@ -74,4 +91,5 @@ public class AwtPainter implements Painter
 		int py = (int) Math.round(y - radius);
 		g.fillOval(px, py, d, d);
 	}
+
 }
