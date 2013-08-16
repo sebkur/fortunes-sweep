@@ -83,24 +83,24 @@ public class ParabolaPoint extends Point
 		return (a * d + b) * d + c;
 	}
 
-	public static double[] solveQuadratic(double d, double d1, double d2)
+	public static double[] solveQuadratic(double da, double db, double dc)
 			throws Exception
 	{
 		double ad[] = new double[2];
-		double d3 = d1 * d1 - 4D * d * d2;
+		double d3 = db * db - 4D * da * dc;
 		if (d3 < 0.0D) {
 			throw new Exception();
 		}
-		if (d == 0.0D) {
-			if (d1 != 0.0D) {
-				ad[0] = -d2 / d1;
+		if (da == 0.0D) {
+			if (db != 0.0D) {
+				ad[0] = -dc / db;
 			} else {
 				throw new Exception();
 			}
 		} else {
 			double d4 = Math.sqrt(d3);
-			double d5 = -d1;
-			double d6 = 2D * d;
+			double d5 = -db;
+			double d6 = 2D * da;
 			ad[0] = (d5 + d4) / d6;
 			ad[1] = (d5 - d4) / d6;
 		}
