@@ -21,29 +21,29 @@ public class EventQueue
 		}
 	}
 
-	public void remove(EventPoint eventpoint)
+	public void remove(EventPoint eventPoint)
 	{
-		if (eventpoint.getNext() != null) {
-			eventpoint.getNext().setPrevious(eventpoint.getPrevious());
+		if (eventPoint.getNext() != null) {
+			eventPoint.getNext().setPrevious(eventPoint.getPrevious());
 		}
 
-		if (eventpoint.getPrevious() != null) {
-			eventpoint.getPrevious().setNext(eventpoint.getNext());
+		if (eventPoint.getPrevious() != null) {
+			eventPoint.getPrevious().setNext(eventPoint.getNext());
 		} else {
-			events = eventpoint.getNext();
+			events = eventPoint.getNext();
 		}
 	}
 
 	public EventPoint pop()
 	{
-		EventPoint eventpoint = events;
-		if (eventpoint != null) {
+		EventPoint eventPoint = events;
+		if (eventPoint != null) {
 			events = events.getNext();
 			if (events != null) {
 				events.setPrevious(null);
 			}
 		}
-		return eventpoint;
+		return eventPoint;
 	}
 
 }

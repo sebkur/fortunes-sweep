@@ -38,32 +38,32 @@ public class EventPoint extends Point
 		this.next = next;
 	}
 
-	public void insert(EventPoint eventpoint)
+	public void insert(EventPoint eventPoint)
 	{
-		if (eventpoint.getX() > getX() || eventpoint.getX() == getX()
-				&& eventpoint.getY() > getY()) {
+		if (eventPoint.getX() > getX() || eventPoint.getX() == getX()
+				&& eventPoint.getY() > getY()) {
 			if (next != null) {
-				next.insert(eventpoint);
+				next.insert(eventPoint);
 				return;
 			} else {
-				next = eventpoint;
-				eventpoint.prev = this;
+				next = eventPoint;
+				eventPoint.prev = this;
 				return;
 			}
 		}
-		if (eventpoint.getX() != getX() || eventpoint.getY() != getY()
-				|| (eventpoint instanceof CirclePoint)) {
-			eventpoint.prev = prev;
-			eventpoint.next = this;
+		if (eventPoint.getX() != getX() || eventPoint.getY() != getY()
+				|| (eventPoint instanceof CirclePoint)) {
+			eventPoint.prev = prev;
+			eventPoint.next = this;
 			if (prev != null) {
-				prev.next = eventpoint;
+				prev.next = eventPoint;
 			}
-			prev = eventpoint;
+			prev = eventPoint;
 			return;
 		} else {
-			eventpoint.prev = eventpoint;
+			eventPoint.prev = eventPoint;
 			System.out
-					.println("Double point ignored: " + eventpoint.toString());
+					.println("Double point ignored: " + eventPoint.toString());
 			return;
 		}
 	}

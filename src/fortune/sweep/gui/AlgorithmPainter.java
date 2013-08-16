@@ -118,21 +118,21 @@ public class AlgorithmPainter
 
 	private void paintEventQueue(EventQueue queue, boolean drawCircles)
 	{
-		for (EventPoint eventpoint = queue.getEvents(); eventpoint != null; eventpoint = eventpoint
+		for (EventPoint eventPoint = queue.getEvents(); eventPoint != null; eventPoint = eventPoint
 				.getNext()) {
-			if (drawCircles || !(eventpoint instanceof CirclePoint)) {
-				if (eventpoint instanceof CirclePoint) {
-					CirclePoint cp = (CirclePoint) eventpoint;
+			if (drawCircles || !(eventPoint instanceof CirclePoint)) {
+				if (eventPoint instanceof CirclePoint) {
+					CirclePoint cp = (CirclePoint) eventPoint;
 
 					painter.setColor(new Color(colorCircles));
 					painter.drawCircle(cp.getX() - cp.getRadius(), cp.getY(),
 							cp.getRadius());
 
 					painter.setColor(new Color(colorCircleEventPoints));
-					painter.paint(eventpoint);
+					painter.paint(eventPoint);
 				} else {
 					painter.setColor(new Color(colorSites));
-					painter.paint(eventpoint);
+					painter.paint(eventPoint);
 				}
 			}
 		}

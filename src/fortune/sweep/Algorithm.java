@@ -122,9 +122,9 @@ public class Algorithm
 
 		while (events.getEvents() != null
 				&& (double) xPos >= events.getEvents().getX()) {
-			EventPoint eventpoint = events.pop();
-			xPos = Math.max(xPos, (int) eventpoint.getX());
-			eventpoint.action(this);
+			EventPoint eventPoint = events.pop();
+			xPos = Math.max(xPos, (int) eventPoint.getX());
+			eventPoint.action(this);
 		}
 
 		notifyWatchers();
@@ -138,10 +138,10 @@ public class Algorithm
 
 	public synchronized void step()
 	{
-		EventPoint eventpoint = events.pop();
-		if (eventpoint != null) {
-			xPos = Math.max(xPos, (int) eventpoint.getX());
-			eventpoint.action(this);
+		EventPoint eventPoint = events.pop();
+		if (eventPoint != null) {
+			xPos = Math.max(xPos, (int) eventPoint.getX());
+			eventPoint.action(this);
 		} else if (xPos < maxX) {
 			xPos = maxX;
 		}
