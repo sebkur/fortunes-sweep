@@ -13,9 +13,9 @@ public class EventPoint extends Point
 		super(point);
 	}
 
-	public EventPoint(double d, double d1)
+	public EventPoint(double x, double y)
 	{
-		super(d, d1);
+		super(x, y);
 	}
 
 	public EventPoint getNext()

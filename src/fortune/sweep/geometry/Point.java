@@ -39,9 +39,9 @@ public class Point
 
 	public double distance(Point point)
 	{
-		double d = point.x - x;
-		double d1 = point.y - y;
-		return Math.sqrt(d * d + d1 * d1);
+		double dx = point.x - x;
+		double dy = point.y - y;
+		return Math.sqrt(dx * dx + dy * dy);
 	}
 
 }

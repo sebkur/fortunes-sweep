@@ -8,9 +8,9 @@ public class CirclePoint extends EventPoint
 	private double radius;
 	private ArcNode arc;
 
-	public CirclePoint(double d, double d1, ArcNode arcnode)
+	public CirclePoint(double x, double y, ArcNode arcnode)
 	{
-		super(d, d1);
+		super(x, y);
 		arc = arcnode;
 		radius = distance(arcnode);
 		setX(getX() + radius);
