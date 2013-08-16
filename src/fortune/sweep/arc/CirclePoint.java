@@ -1,8 +1,6 @@
 package fortune.sweep.arc;
 
-import fortune.sweep.Algorithm;
 import fortune.sweep.EventPoint;
-import fortune.sweep.geometry.Point;
 
 public class CirclePoint extends EventPoint
 {
@@ -23,26 +21,9 @@ public class CirclePoint extends EventPoint
 		return radius;
 	}
 
-	public void action(Algorithm algorithm)
+	public ArcNode getArc()
 	{
-		ArcNode arcnode = arc.getPrevious();
-		ArcNode arcnode1 = arc.getNext();
-		Point point = new Point(getX() - radius, getY());
-		arc.completeTrace(algorithm, point);
-		arcnode.completeTrace(algorithm, point);
-		arcnode.setStartOfTrace(point);
-		arcnode.setNext(arcnode1);
-		arcnode1.setPrevious(arcnode);
-		if (arcnode.getCirclePoint() != null) {
-			algorithm.getEventQueue().remove(arcnode.getCirclePoint());
-			arcnode.setCirclePoint(null);
-		}
-		if (arcnode1.getCirclePoint() != null) {
-			algorithm.getEventQueue().remove(arcnode1.getCirclePoint());
-			arcnode1.setCirclePoint(null);
-		}
-		arcnode.checkCircle(algorithm.getEventQueue());
-		arcnode1.checkCircle(algorithm.getEventQueue());
+		return arc;
 	}
 
 }

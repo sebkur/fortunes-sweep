@@ -3,7 +3,9 @@ package fortune.sweep;
 import java.util.ArrayList;
 import java.util.List;
 
+import fortune.sweep.arc.ArcNode;
 import fortune.sweep.arc.ArcTree;
+import fortune.sweep.arc.CirclePoint;
 import fortune.sweep.geometry.Point;
 
 public class Algorithm
@@ -124,7 +126,7 @@ public class Algorithm
 				&& (double) xPos >= events.getEvents().getX()) {
 			EventPoint eventPoint = events.pop();
 			xPos = Math.max(xPos, (int) eventPoint.getX());
-			eventPoint.action(this);
+			process(eventPoint);
 		}
 
 		notifyWatchers();
@@ -141,7 +143,7 @@ public class Algorithm
 		EventPoint eventPoint = events.pop();
 		if (eventPoint != null) {
 			xPos = Math.max(xPos, (int) eventPoint.getX());
-			eventPoint.action(this);
+			process(eventPoint);
 		} else if (xPos < maxX) {
 			xPos = maxX;
 		}
@@ -158,6 +160,36 @@ public class Algorithm
 	{
 		init();
 		notifyWatchers();
+	}
+
+	private void process(EventPoint eventPoint)
+	{
+		if (eventPoint instanceof CirclePoint) {
+			CirclePoint circlePoint = (CirclePoint) eventPoint;
+			ArcNode arc = circlePoint.getArc();
+			ArcNode arcnode = arc.getPrevious();
+			ArcNode arcnode1 = arc.getNext();
+			Point point = new Point(
+					eventPoint.getX() - circlePoint.getRadius(),
+					eventPoint.getY());
+			arc.completeTrace(this, point);
+			arcnode.completeTrace(this, point);
+			arcnode.setStartOfTrace(point);
+			arcnode.setNext(arcnode1);
+			arcnode1.setPrevious(arcnode);
+			if (arcnode.getCirclePoint() != null) {
+				getEventQueue().remove(arcnode.getCirclePoint());
+				arcnode.setCirclePoint(null);
+			}
+			if (arcnode1.getCirclePoint() != null) {
+				getEventQueue().remove(arcnode1.getCirclePoint());
+				arcnode1.setCirclePoint(null);
+			}
+			arcnode.checkCircle(getEventQueue());
+			arcnode1.checkCircle(getEventQueue());
+		} else {
+			getArcs().insert(eventPoint, getSweepX(), getEventQueue());
+		}
 	}
 
 }
