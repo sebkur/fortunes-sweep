@@ -15,7 +15,7 @@ public class Algorithm
 	private Voronoi voronoi;
 	private Delaunay delaunay;
 
-	private int xPos;
+	private double xPos;
 	private int maxX;
 	private int height;
 
@@ -53,7 +53,7 @@ public class Algorithm
 		this.height = height;
 	}
 
-	public int getSweepX()
+	public double getSweepX()
 	{
 		return xPos;
 	}
@@ -66,11 +66,6 @@ public class Algorithm
 	public Delaunay getDelaunay()
 	{
 		return delaunay;
-	}
-
-	public int getxPos()
-	{
-		return xPos;
 	}
 
 	public EventQueue getEventQueue()
@@ -148,12 +143,14 @@ public class Algorithm
 			currentEvent = null;
 		}
 
-		while (events.size() != 0 && xPos >= events.top().getX()) {
+		double xPosOld = xPos;
+		while (events.size() != 0 && xPosOld >= events.top().getX()) {
 			EventPoint eventPoint = events.pop();
-			xPos = Math.max(xPos, (int) eventPoint.getX());
+			xPos = eventPoint.getX();
 			process(eventPoint);
 			currentEvent = eventPoint;
 		}
+		xPos = xPosOld;
 
 		notifyWatchers();
 		return !isFinshed();
@@ -168,7 +165,7 @@ public class Algorithm
 	{
 		if (events.size() > 0) {
 			EventPoint eventPoint = events.pop();
-			xPos = Math.max(xPos, (int) eventPoint.getX());
+			xPos = eventPoint.getX();
 			process(eventPoint);
 			currentEvent = eventPoint;
 		} else if (xPos < maxX) {

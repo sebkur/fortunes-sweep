@@ -69,7 +69,7 @@ public class Canvas extends JPanel implements AlgorithmWatcher
 		int MARGIN = 20;
 		int MINSIZE = 20;
 
-		int sx = algorithm.getSweepX();
+		int sx = (int) Math.ceil(algorithm.getSweepX());
 		int width = getWidth() - sx;
 		int marginX = 0;
 		int marginY = 0;
