@@ -3,6 +3,7 @@ package fortune.sweep.gui.swing;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -55,9 +56,9 @@ public class SwingFortune extends JFrame implements Runnable
 
 		JMenu menuFile = new JMenu("File");
 		menu.add(menuFile);
-		JMenuItem open = new JMenuItem(new OpenAction());
+		JMenuItem open = new JMenuItem(new OpenAction(this));
 		menuFile.add(open);
-		JMenuItem save = new JMenuItem(new SaveAction());
+		JMenuItem save = new JMenuItem(new SaveAction(this));
 		menuFile.add(save);
 		JMenuItem quit = new JMenuItem(new QuitAction());
 		menuFile.add(quit);
@@ -169,4 +170,28 @@ public class SwingFortune extends JFrame implements Runnable
 		}
 	}
 
+	/*
+	 * Open / Save dialogs related stuff
+	 */
+
+	private File lastActiveDirectory = null;
+
+	public File getLastActiveDirectory()
+	{
+		return lastActiveDirectory;
+	}
+
+	public void setLastActiveDirectory(File lastActiveDirectory)
+	{
+		this.lastActiveDirectory = lastActiveDirectory;
+	}
+
+	/*
+	 * Various
+	 */
+
+	public Algorithm getAlgorithm()
+	{
+		return algorithm;
+	}
 }

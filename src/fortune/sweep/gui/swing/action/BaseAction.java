@@ -34,8 +34,9 @@ public abstract class BaseAction extends AbstractAction
 		}
 		return null;
 	}
-	
-	protected void setIconFromResource(String filename) {
+
+	protected void setIconFromResource(String filename)
+	{
 		icon = ImageLoader.load(filename);
 	}
 }

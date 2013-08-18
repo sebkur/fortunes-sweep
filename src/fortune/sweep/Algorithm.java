@@ -1,6 +1,7 @@
 package fortune.sweep;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fortune.sweep.arc.ArcNode;
@@ -18,6 +19,7 @@ public class Algorithm
 	private int maxX;
 	private int height;
 
+	private List<Point> sites;
 	private EventQueue events;
 	private ArcTree arcs;
 
@@ -25,6 +27,7 @@ public class Algorithm
 
 	public Algorithm()
 	{
+		sites = new ArrayList<Point>();
 		voronoi = new Voronoi();
 		init();
 	}
@@ -81,6 +84,7 @@ public class Algorithm
 
 	public void addSite(Point point)
 	{
+		sites.add(point);
 		voronoi.addSite(point);
 		voronoi.checkDegenerate();
 		events.insert(new SitePoint(point));
@@ -94,6 +98,21 @@ public class Algorithm
 	public void removeWatcher(AlgorithmWatcher watcher)
 	{
 		watchers.remove(watcher);
+	}
+
+	public List<Point> getSites()
+	{
+		return Collections.unmodifiableList(sites);
+	}
+
+	public void setSites(List<Point> sites)
+	{
+		this.sites = sites;
+		voronoi = new Voronoi();
+		for (Point point : sites) {
+			voronoi.addSite(point);
+		}
+		restart();
 	}
 
 	private void notifyWatchers()
@@ -110,8 +129,9 @@ public class Algorithm
 		events = new EventQueue();
 		voronoi.clear();
 		delaunay = new Delaunay();
-		for (int i = 0; i < voronoi.getNumberOfSites(); i++) {
-			events.insert(new SitePoint(voronoi.getSite(i)));
+		for (Point point : sites) {
+			voronoi.addSite(point);
+			events.insert(new SitePoint(point));
 		}
 	}
 
@@ -138,8 +158,8 @@ public class Algorithm
 
 	public synchronized void step()
 	{
-		EventPoint eventPoint = events.pop();
-		if (eventPoint != null) {
+		if (events.size() > 0) {
+			EventPoint eventPoint = events.pop();
 			xPos = Math.max(xPos, (int) eventPoint.getX());
 			process(eventPoint);
 		} else if (xPos < maxX) {
@@ -150,6 +170,7 @@ public class Algorithm
 
 	public synchronized void clear()
 	{
+		sites = new ArrayList<Point>();
 		voronoi = new Voronoi();
 		restart();
 	}
