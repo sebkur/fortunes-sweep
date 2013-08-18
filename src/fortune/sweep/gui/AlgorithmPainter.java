@@ -85,6 +85,10 @@ public class AlgorithmPainter
 			paintEventQueue(algorithm.getEventQueue(), config.isDrawCircles());
 			paintArcs(algorithm.getArcs().getArcs(), algorithm.getSweepX());
 		}
+		
+		if (algorithm.getCurrentEvent() != null) {
+			paintEventPoint(algorithm.getCurrentEvent(), config.isDrawCircles());
+		}
 
 		if (config.isDrawDelaunay()) {
 			paintDelaunay(algorithm.getDelaunay());
@@ -122,22 +126,27 @@ public class AlgorithmPainter
 		Iterator<EventPoint> iterator = queue.getCopy().iterator();
 		while (iterator.hasNext()) {
 			EventPoint eventPoint = iterator.next();
-			if (drawCircles || !(eventPoint instanceof CirclePoint)) {
-				if (eventPoint instanceof CirclePoint) {
-					CirclePoint cp = (CirclePoint) eventPoint;
-
-					painter.setColor(new Color(colorCircles));
-					painter.drawCircle(cp.getX() - cp.getRadius(), cp.getY(),
-							cp.getRadius());
-
-					painter.setColor(new Color(colorCircleEventPoints));
-					painter.paint(eventPoint);
-				} else {
-					painter.setColor(new Color(colorSites));
-					painter.paint(eventPoint);
-				}
-			}
+			paintEventPoint(eventPoint, drawCircles);
 		}
+	}
+
+	private void paintEventPoint(EventPoint eventPoint, boolean drawCircles)
+	{
+		if (drawCircles || !(eventPoint instanceof CirclePoint)) {
+			if (eventPoint instanceof CirclePoint) {
+				CirclePoint cp = (CirclePoint) eventPoint;
+
+				painter.setColor(new Color(colorCircles));
+				painter.drawCircle(cp.getX() - cp.getRadius(), cp.getY(),
+						cp.getRadius());
+
+				painter.setColor(new Color(colorCircleEventPoints));
+				painter.paint(eventPoint);
+			} else {
+				painter.setColor(new Color(colorSites));
+				painter.paint(eventPoint);
+			}
+		}	
 	}
 
 	private void paintArcs(ArcNode arcNode, double sweepX)

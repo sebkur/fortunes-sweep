@@ -20,6 +20,7 @@ public class Algorithm
 	private int height;
 
 	private List<Point> sites;
+	private EventPoint currentEvent;
 	private EventQueue events;
 	private ArcTree arcs;
 
@@ -77,6 +78,11 @@ public class Algorithm
 		return events;
 	}
 
+	public EventPoint getCurrentEvent()
+	{
+		return currentEvent;
+	}
+	
 	public ArcTree getArcs()
 	{
 		return arcs;
@@ -139,12 +145,14 @@ public class Algorithm
 	{
 		if (events.size() == 0 || xPos < events.top().getX()) {
 			xPos++;
+			currentEvent = null;
 		}
 
 		while (events.size() != 0 && xPos >= events.top().getX()) {
 			EventPoint eventPoint = events.pop();
 			xPos = Math.max(xPos, (int) eventPoint.getX());
 			process(eventPoint);
+			currentEvent = eventPoint;
 		}
 
 		notifyWatchers();
@@ -162,8 +170,10 @@ public class Algorithm
 			EventPoint eventPoint = events.pop();
 			xPos = Math.max(xPos, (int) eventPoint.getX());
 			process(eventPoint);
+			currentEvent = eventPoint;
 		} else if (xPos < maxX) {
 			xPos = maxX;
+			currentEvent = null;
 		}
 		notifyWatchers();
 	}
