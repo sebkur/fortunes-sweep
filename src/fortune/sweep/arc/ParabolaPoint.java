@@ -79,9 +79,9 @@ public class ParabolaPoint extends Point
 		c = (d1 * d1) / (2D * d2) + d2 / 2D;
 	}
 
-	public double f(double d)
+	public double f(double y)
 	{
-		return (a * d + b) * d + c;
+		return a * y  * y + b * y + c;
 	}
 
 	public static double[] solveQuadratic(double da, double db, double dc)
