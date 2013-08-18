@@ -137,11 +137,11 @@ public class Algorithm
 
 	public synchronized boolean singlestep()
 	{
-		if (events.size() == 0 || (double) xPos < events.top().getX()) {
+		if (events.size() == 0 || xPos < events.top().getX()) {
 			xPos++;
 		}
 
-		while (events.size() != 0 && (double) xPos >= events.top().getX()) {
+		while (events.size() != 0 && xPos >= events.top().getX()) {
 			EventPoint eventPoint = events.pop();
 			xPos = Math.max(xPos, (int) eventPoint.getX());
 			process(eventPoint);
