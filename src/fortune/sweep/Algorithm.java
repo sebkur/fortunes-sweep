@@ -11,6 +11,7 @@ import fortune.sweep.geometry.Point;
 
 public class Algorithm
 {
+	private static final int PLAY_N_PIXELS_BEYOND_SCREEN = 1000;
 
 	private Voronoi voronoi;
 	private Delaunay delaunay;
@@ -77,7 +78,7 @@ public class Algorithm
 	{
 		return currentEvent;
 	}
-	
+
 	public ArcTree getArcs()
 	{
 		return arcs;
@@ -158,7 +159,8 @@ public class Algorithm
 
 	public synchronized boolean isFinshed()
 	{
-		return !(events.size() != 0 || xPos < 1000 + maxX);
+		return !(events.size() != 0 || xPos < PLAY_N_PIXELS_BEYOND_SCREEN
+				+ maxX);
 	}
 
 	public synchronized void step()
