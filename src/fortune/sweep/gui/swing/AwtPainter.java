@@ -60,7 +60,8 @@ public class AwtPainter implements Painter
 	@Override
 	public void paint(Point p)
 	{
-		g.fillOval((int) (p.getX() - 3.0), (int) (p.getY() - 3.0), 7, 7);
+		g.fillOval((int) Math.round(p.getX() - 3.0),
+				(int) Math.round(p.getY() - 3.0), 7, 7);
 	}
 
 	@Override
@@ -68,8 +69,7 @@ public class AwtPainter implements Painter
 	{
 		Point p1 = e.getStart();
 		Point p2 = e.getEnd();
-		g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(),
-				(int) p2.getY());
+		drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 	}
 
 	@Override

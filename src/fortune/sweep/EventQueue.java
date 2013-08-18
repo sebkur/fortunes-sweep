@@ -1,49 +1,82 @@
 package fortune.sweep;
 
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import fortune.sweep.arc.CirclePoint;
+
 public class EventQueue
 {
 
-	private EventPoint events;
+	private SortedSet<EventPoint> points;
 
-	public EventPoint getEvents()
+	public EventQueue()
 	{
-		return events;
+		points = new TreeSet<EventPoint>(new Comparator<EventPoint>() {
+
+			@Override
+			public int compare(EventPoint e1, EventPoint e2)
+			{
+				if (e1.getX() != e2.getX()) {
+					if (e1.getX() < e2.getX()) {
+						return -1;
+					} else if (e1.getX() > e2.getX()) {
+						return 1;
+					}
+				}
+				// e1.getX() == e2.getX()
+				if (e1.getY() < e2.getY()) {
+					return -1;
+				} else if (e1.getY() > e2.getY()) {
+					return 1;
+				}
+				// e1.getY() == e2.getY()
+				boolean c1 = e1 instanceof CirclePoint;
+				boolean c2 = e1 instanceof CirclePoint;
+				if (c1 && !c2) {
+					return -1;
+				}
+				if (!c1 && c2) {
+					return 1;
+				}
+				// c1 == c2
+				return 0;
+			}
+		});
+	}
+
+	public int size()
+	{
+		return points.size();
 	}
 
 	public void insert(EventPoint p)
 	{
-		if (events != null) {
-			events.insert(p);
-		}
-
-		if (p.getPrevious() == null) {
-			events = p;
-		}
+		points.add(p);
 	}
 
 	public void remove(EventPoint eventPoint)
 	{
-		if (eventPoint.getNext() != null) {
-			eventPoint.getNext().setPrevious(eventPoint.getPrevious());
-		}
+		points.remove(eventPoint);
+	}
 
-		if (eventPoint.getPrevious() != null) {
-			eventPoint.getPrevious().setNext(eventPoint.getNext());
-		} else {
-			events = eventPoint.getNext();
-		}
+	public EventPoint top()
+	{
+		return points.first();
 	}
 
 	public EventPoint pop()
 	{
-		EventPoint eventPoint = events;
-		if (eventPoint != null) {
-			events = events.getNext();
-			if (events != null) {
-				events.setPrevious(null);
-			}
-		}
-		return eventPoint;
+		EventPoint point = points.first();
+		points.remove(point);
+		return point;
+	}
+
+	public Iterator<EventPoint> iterator()
+	{
+		return points.iterator();
 	}
 
 }

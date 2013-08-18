@@ -1,5 +1,6 @@
 package fortune.sweep.geometry;
 
+
 public class Point
 {
 
@@ -42,6 +43,15 @@ public class Point
 		double dx = point.x - x;
 		double dy = point.y - y;
 		return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	public boolean equals(Object other)
+	{
+		if (!(other instanceof Point)) {
+			return false;
+		}
+		Point o = (Point) other;
+		return o.getX() == getX() && o.getY() == getY();
 	}
 
 }

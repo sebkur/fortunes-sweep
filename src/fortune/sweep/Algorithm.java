@@ -83,7 +83,7 @@ public class Algorithm
 	{
 		voronoi.addSite(point);
 		voronoi.checkDegenerate();
-		events.insert(new EventPoint(point));
+		events.insert(new SitePoint(point));
 	}
 
 	public void addWatcher(AlgorithmWatcher watcher)
@@ -111,19 +111,17 @@ public class Algorithm
 		voronoi.clear();
 		delaunay = new Delaunay();
 		for (int i = 0; i < voronoi.getNumberOfSites(); i++) {
-			events.insert(new EventPoint(voronoi.getSite(i)));
+			events.insert(new SitePoint(voronoi.getSite(i)));
 		}
 	}
 
 	public synchronized boolean singlestep()
 	{
-		if (events.getEvents() == null
-				|| (double) xPos < events.getEvents().getX()) {
+		if (events.size() == 0 || (double) xPos < events.top().getX()) {
 			xPos++;
 		}
 
-		while (events.getEvents() != null
-				&& (double) xPos >= events.getEvents().getX()) {
+		while (events.size() != 0 && (double) xPos >= events.top().getX()) {
 			EventPoint eventPoint = events.pop();
 			xPos = Math.max(xPos, (int) eventPoint.getX());
 			process(eventPoint);
@@ -135,7 +133,7 @@ public class Algorithm
 
 	public synchronized boolean isFinshed()
 	{
-		return !(events.getEvents() != null || xPos < 1000 + maxX);
+		return !(events.size() != 0 || xPos < 1000 + maxX);
 	}
 
 	public synchronized void step()

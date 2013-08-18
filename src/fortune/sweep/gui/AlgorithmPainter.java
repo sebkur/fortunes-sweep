@@ -1,5 +1,6 @@
 package fortune.sweep.gui;
 
+import java.util.Iterator;
 import java.util.List;
 
 import fortune.sweep.Algorithm;
@@ -118,8 +119,9 @@ public class AlgorithmPainter
 
 	private void paintEventQueue(EventQueue queue, boolean drawCircles)
 	{
-		for (EventPoint eventPoint = queue.getEvents(); eventPoint != null; eventPoint = eventPoint
-				.getNext()) {
+		Iterator<EventPoint> iterator = queue.iterator();
+		while (iterator.hasNext()) {
+			EventPoint eventPoint = iterator.next();
 			if (drawCircles || !(eventPoint instanceof CirclePoint)) {
 				if (eventPoint instanceof CirclePoint) {
 					CirclePoint cp = (CirclePoint) eventPoint;

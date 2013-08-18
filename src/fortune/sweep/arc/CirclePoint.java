@@ -26,4 +26,12 @@ public class CirclePoint extends EventPoint
 		return arc;
 	}
 
+	public boolean equals(Object other)
+	{
+		if (!(other instanceof CirclePoint)) {
+			return false;
+		}
+		CirclePoint o = (CirclePoint) other;
+		return o.getX() == getX() && o.getY() == getY();
+	}
 }

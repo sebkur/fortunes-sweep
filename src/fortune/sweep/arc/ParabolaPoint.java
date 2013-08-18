@@ -64,6 +64,7 @@ public class ParabolaPoint extends Point
 				d4 = (d3 - d1) / (d - d2);
 				d5 = d * d4 + d1;
 			}
+			// d4, d5 is the center of the circle through three points
 			circlepoint = new CirclePoint(d4, d5, arcnode);
 		}
 		return circlepoint;
