@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.gui.Config;
+import fortune.sweep.gui.swing.action.OpenAction;
+import fortune.sweep.gui.swing.action.QuitAction;
+import fortune.sweep.gui.swing.action.SaveAction;
 
 public class SwingFortune extends JFrame implements Runnable
 {
@@ -49,12 +52,16 @@ public class SwingFortune extends JFrame implements Runnable
 	public void init()
 	{
 		menu = new JMenuBar();
-		
+
 		JMenu menuFile = new JMenu("File");
 		menu.add(menuFile);
-		JMenuItem quit = new JMenuItem("Quit");
+		JMenuItem open = new JMenuItem(new OpenAction());
+		menuFile.add(open);
+		JMenuItem save = new JMenuItem(new SaveAction());
+		menuFile.add(save);
+		JMenuItem quit = new JMenuItem(new QuitAction());
 		menuFile.add(quit);
-		
+
 		JMenu menuHelp = new JMenu("Help");
 		menu.add(menuHelp);
 		JMenuItem about = new JMenuItem("About");
@@ -81,7 +88,7 @@ public class SwingFortune extends JFrame implements Runnable
 		canvas = new Canvas(algorithm, config, getWidth(), getHeight() - 50);
 		controls = new Controls(this, algorithm);
 		settings = new Settings(canvas, config);
-		
+
 		main.add(settings, BorderLayout.NORTH);
 		main.add(canvas, BorderLayout.CENTER);
 		main.add(controls, BorderLayout.SOUTH);
