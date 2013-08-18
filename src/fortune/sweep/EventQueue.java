@@ -47,27 +47,27 @@ public class EventQueue
 		});
 	}
 
-	public int size()
+	public synchronized int size()
 	{
 		return points.size();
 	}
 
-	public void insert(EventPoint p)
+	public synchronized void insert(EventPoint p)
 	{
 		points.add(p);
 	}
 
-	public void remove(EventPoint eventPoint)
+	public synchronized void remove(EventPoint eventPoint)
 	{
 		points.remove(eventPoint);
 	}
 
-	public EventPoint top()
+	public synchronized EventPoint top()
 	{
 		return points.first();
 	}
 
-	public EventPoint pop()
+	public synchronized EventPoint pop()
 	{
 		EventPoint point = points.first();
 		points.remove(point);
@@ -77,6 +77,15 @@ public class EventQueue
 	public Iterator<EventPoint> iterator()
 	{
 		return points.iterator();
+	}
+	
+	public synchronized EventQueue getCopy()
+	{
+		EventQueue copy = new EventQueue();
+		for (EventPoint point : points) {
+			copy.insert(point);
+		}
+		return copy;
 	}
 
 }

@@ -119,7 +119,7 @@ public class AlgorithmPainter
 
 	private void paintEventQueue(EventQueue queue, boolean drawCircles)
 	{
-		Iterator<EventPoint> iterator = queue.iterator();
+		Iterator<EventPoint> iterator = queue.getCopy().iterator();
 		while (iterator.hasNext()) {
 			EventPoint eventPoint = iterator.next();
 			if (drawCircles || !(eventPoint instanceof CirclePoint)) {
