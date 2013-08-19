@@ -1,6 +1,6 @@
-package fortune.sweep.arc;
+package fortune.sweep.events;
 
-import fortune.sweep.EventPoint;
+import fortune.sweep.arc.ArcNode;
 
 public class CirclePoint extends EventPoint
 {

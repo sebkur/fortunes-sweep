@@ -1,7 +1,8 @@
 package fortune.sweep.arc;
 
 import fortune.sweep.Algorithm;
-import fortune.sweep.EventQueue;
+import fortune.sweep.events.CirclePoint;
+import fortune.sweep.events.EventQueue;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 

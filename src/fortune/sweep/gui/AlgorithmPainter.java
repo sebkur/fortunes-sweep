@@ -5,13 +5,13 @@ import java.util.List;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.Delaunay;
-import fortune.sweep.EventPoint;
-import fortune.sweep.EventQueue;
 import fortune.sweep.Voronoi;
 import fortune.sweep.arc.AbstractArcNodeVisitor;
 import fortune.sweep.arc.ArcNode;
 import fortune.sweep.arc.ArcNodeWalker;
-import fortune.sweep.arc.CirclePoint;
+import fortune.sweep.events.CirclePoint;
+import fortune.sweep.events.EventPoint;
+import fortune.sweep.events.EventQueue;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 

@@ -6,7 +6,10 @@ import java.util.List;
 
 import fortune.sweep.arc.ArcNode;
 import fortune.sweep.arc.ArcTree;
-import fortune.sweep.arc.CirclePoint;
+import fortune.sweep.events.CirclePoint;
+import fortune.sweep.events.EventPoint;
+import fortune.sweep.events.EventQueue;
+import fortune.sweep.events.SitePoint;
 import fortune.sweep.geometry.Point;
 
 public class Algorithm

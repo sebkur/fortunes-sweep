@@ -1,4 +1,4 @@
-package fortune.sweep;
+package fortune.sweep.events;
 
 import fortune.sweep.geometry.Point;
 

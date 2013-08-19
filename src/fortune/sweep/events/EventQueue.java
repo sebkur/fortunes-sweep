@@ -1,11 +1,10 @@
-package fortune.sweep;
+package fortune.sweep.events;
 
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import fortune.sweep.arc.CirclePoint;
 
 public class EventQueue
 {

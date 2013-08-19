@@ -1,5 +1,6 @@
 package fortune.sweep.arc;
 
+import fortune.sweep.events.CirclePoint;
 import fortune.sweep.geometry.Point;
 
 public class ParabolaPoint extends Point

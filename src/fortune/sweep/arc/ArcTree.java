@@ -1,6 +1,6 @@
 package fortune.sweep.arc;
 
-import fortune.sweep.EventQueue;
+import fortune.sweep.events.EventQueue;
 import fortune.sweep.geometry.Point;
 
 public class ArcTree
