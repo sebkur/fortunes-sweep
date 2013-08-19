@@ -51,9 +51,9 @@ public class EventQueue
 		return points.size();
 	}
 
-	public synchronized void insert(EventPoint p)
+	public synchronized void insert(EventPoint eventPoint)
 	{
-		points.add(p);
+		points.add(eventPoint);
 	}
 
 	public synchronized void remove(EventPoint eventPoint)
