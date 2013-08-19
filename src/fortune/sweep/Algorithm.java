@@ -138,7 +138,7 @@ public class Algorithm
 		}
 	}
 
-	public synchronized boolean singlestep()
+	public synchronized boolean nextPixel()
 	{
 		if (events.size() == 0 || xPos < events.top().getX()) {
 			xPos++;
@@ -158,13 +158,23 @@ public class Algorithm
 		return !isFinshed();
 	}
 
+	public synchronized boolean previousPixel()
+	{
+		if (xPos > 0) {
+			xPos--;
+		}
+		
+		notifyWatchers();
+		return xPos > 0;
+	}
+
 	public synchronized boolean isFinshed()
 	{
 		return !(events.size() != 0 || xPos < PLAY_N_PIXELS_BEYOND_SCREEN
 				+ maxX);
 	}
 
-	public synchronized void step()
+	public synchronized void nextEvent()
 	{
 		if (events.size() > 0) {
 			EventPoint eventPoint = events.pop();

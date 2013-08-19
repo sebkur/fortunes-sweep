@@ -138,7 +138,7 @@ public class SwingFortune extends JFrame implements Runnable
 	{
 		while (true) {
 			if (running) {
-				boolean eventsLeft = algorithm.singlestep();
+				boolean eventsLeft = algorithm.nextPixel();
 				if (!eventsLeft) {
 					setPaused();
 				}
