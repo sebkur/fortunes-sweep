@@ -8,9 +8,10 @@ import fortune.sweep.Delaunay;
 import fortune.sweep.EventPoint;
 import fortune.sweep.EventQueue;
 import fortune.sweep.Voronoi;
+import fortune.sweep.arc.AbstractArcNodeVisitor;
 import fortune.sweep.arc.ArcNode;
+import fortune.sweep.arc.ArcNodeWalker;
 import fortune.sweep.arc.CirclePoint;
-import fortune.sweep.arc.ParabolaPoint;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 
@@ -60,10 +61,12 @@ public class AlgorithmPainter
 
 	private int colorSites = 0x000000;
 	private int colorSitesVisited = 0x666666;
+	private int colorSiteActive = 0xff0000;
 	private int colorCircleEventPoints = 0x00ff00;
+	private int colorCircleEventPointsActive = 0xff0000;
 	private int colorBeachlineIntersections = 0x00ff00;
 	private int colorSpikes = 0x000000;
-	private int colorSpikeIntersections = 0x0000ff;
+	private int colorSpikeIntersections = 0xff0000;
 
 	private int colorVornoiSegments = 0x0000ff;
 	private int colorArcs = 0x000000;
@@ -85,9 +88,9 @@ public class AlgorithmPainter
 			paintEventQueue(algorithm.getEventQueue(), config.isDrawCircles());
 			paintArcs(algorithm.getArcs().getArcs(), algorithm.getSweepX());
 		}
-		
+
 		if (algorithm.getCurrentEvent() != null) {
-			paintEventPoint(algorithm.getCurrentEvent(), config.isDrawCircles());
+			paintEventPoint(algorithm.getCurrentEvent(), config.isDrawCircles(), true);
 		}
 
 		if (config.isDrawDelaunay()) {
@@ -126,11 +129,11 @@ public class AlgorithmPainter
 		Iterator<EventPoint> iterator = queue.getCopy().iterator();
 		while (iterator.hasNext()) {
 			EventPoint eventPoint = iterator.next();
-			paintEventPoint(eventPoint, drawCircles);
+			paintEventPoint(eventPoint, drawCircles, false);
 		}
 	}
 
-	private void paintEventPoint(EventPoint eventPoint, boolean drawCircles)
+	private void paintEventPoint(EventPoint eventPoint, boolean drawCircles, boolean isActive)
 	{
 		if (drawCircles || !(eventPoint instanceof CirclePoint)) {
 			if (eventPoint instanceof CirclePoint) {
@@ -140,13 +143,21 @@ public class AlgorithmPainter
 				painter.drawCircle(cp.getX() - cp.getRadius(), cp.getY(),
 						cp.getRadius());
 
-				painter.setColor(new Color(colorCircleEventPoints));
+				if (isActive) {
+					painter.setColor(new Color(colorCircleEventPointsActive));
+				}else {					
+					painter.setColor(new Color(colorCircleEventPoints));
+				}
 				painter.paint(eventPoint);
 			} else {
-				painter.setColor(new Color(colorSites));
+				if (isActive) {
+					painter.setColor(new Color(colorSiteActive));
+				}else {					
+					painter.setColor(new Color(colorSites));
+				}
 				painter.paint(eventPoint);
 			}
-		}	
+		}
 	}
 
 	private void paintArcs(ArcNode arcNode, double sweepX)
@@ -156,60 +167,49 @@ public class AlgorithmPainter
 			current.init(sweepX);
 		}
 
-		double y1 = 0.0;
-		double y2 = height;
+		ArcNodeWalker.walk(new AbstractArcNodeVisitor() {
 
-		for (ArcNode current = arcNode; current != null; current = current
-				.getNext()) {
-			ArcNode next = current.getNext();
-
-			if (sweepX == current.getX()) {
-				// spikes on site events
-				if (config.isDrawBeach()) {
-					paintSpike(sweepX, current, next);
-				}
-				y2 = current.getY();
-			} else {
-				if (next == null) {
-					y2 = height;
-				} else {
-					if (sweepX == next.getX()) {
-						y2 = next.getY();
-					} else {
-						try {
-							double ad[] = ParabolaPoint.solveQuadratic(
-									current.getA() - next.getA(),
-									current.getB() - next.getB(),
-									current.getC() - next.getC());
-							y2 = ad[0];
-						} catch (Exception e) {
-							y2 = y1;
-							System.out
-									.println("*** error: No parabola intersection while painting arc - SLine: "
-											+ sweepX
-											+ ", "
-											+ current.toString()
-											+ " "
-											+ next.toString());
-						}
-					}
-				}
-
-				if (config.isDrawBeach()) {
-					paintBeachline(y1, y2, current, sweepX);
-				}
-
+			@Override
+			public void arc(ArcNode current, ArcNode next, double y1,
+					double y2, double sweepX)
+			{
 				if (config.isDrawVoronoiLines()) {
 					paintTraces(y2, current, sweepX);
 				}
 
+				if (config.isDrawBeach()) {
+					paintBeachlineArc(y1, y2, current, sweepX);
+				}
+			}
+		}, arcNode, height, sweepX);
+
+		ArcNodeWalker.walk(new AbstractArcNodeVisitor() {
+
+			@Override
+			public void arc(ArcNode current, ArcNode next, double y1,
+					double y2, double sweepX)
+			{
 				if (config.isDrawBeach() || config.isDrawVoronoiLines()) {
 					paintBeachlineIntersections(y2, current, sweepX);
 				}
 			}
+		}, arcNode, height, sweepX);
 
-			y1 = Math.max(0.0D, y2);
-		}
+		ArcNodeWalker.walk(new AbstractArcNodeVisitor() {
+
+			@Override
+			public void spike(ArcNode current, ArcNode next, double y1,
+					double y2, double sweepX)
+			{
+				if (sweepX == current.getX()) {
+					// spikes on site events
+					if (config.isDrawBeach()) {
+						paintSpike(sweepX, current, next);
+					}
+				}
+			}
+		}, arcNode, height, sweepX);
+
 	}
 
 	private void paintSpike(double sweepX, ArcNode point, ArcNode arc)
@@ -224,7 +224,7 @@ public class AlgorithmPainter
 		// snap debug
 	}
 
-	private void paintBeachline(double yTop, double yBottom, ArcNode current,
+	private void paintBeachlineArc(double yTop, double yBottom, ArcNode current,
 			double sweepX)
 	{
 		painter.setColor(new Color(colorArcs));
