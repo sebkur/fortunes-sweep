@@ -36,6 +36,7 @@ public class SwingFortune extends JFrame implements Runnable
 	private Settings settings;
 
 	private boolean running = false;
+	private boolean foreward = true;
 	private Thread thread;
 	private Object wait = new Object();
 
@@ -138,7 +139,12 @@ public class SwingFortune extends JFrame implements Runnable
 	{
 		while (true) {
 			if (running) {
-				boolean eventsLeft = algorithm.nextPixel();
+				boolean eventsLeft;
+				if (foreward) {
+					eventsLeft = algorithm.nextPixel();
+				} else {
+					eventsLeft = algorithm.previousPixel();
+				}
 				if (!eventsLeft) {
 					setPaused();
 				}
@@ -193,5 +199,20 @@ public class SwingFortune extends JFrame implements Runnable
 	public Algorithm getAlgorithm()
 	{
 		return algorithm;
+	}
+
+	public void setForeward(boolean foreward)
+	{
+		this.foreward = foreward;
+	}
+
+	public boolean isForeward()
+	{
+		return foreward;
+	}
+
+	public boolean isRunning()
+	{
+		return running;
 	}
 }

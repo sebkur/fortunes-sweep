@@ -69,6 +69,7 @@ public class AlgorithmPainter
 	private int colorSpikeIntersections = 0xff0000;
 
 	private int colorVornoiSegments = 0x0000ff;
+	private int colorVornoiTraces = 0xff0000;
 	private int colorArcs = 0x000000;
 	private int colorCircles = 0x000000;
 	private int colorDelaunay = 0x999999;
@@ -259,7 +260,7 @@ public class AlgorithmPainter
 		Point startOfTrace = current.getStartOfTrace();
 		if (startOfTrace != null) {
 			double beachX = sweepX - current.f(beachY);
-			painter.setColor(new Color(colorVornoiSegments));
+			painter.setColor(new Color(colorVornoiTraces));
 			painter.drawLine(startOfTrace.getX(), startOfTrace.getY(), beachX,
 					beachY);
 		}

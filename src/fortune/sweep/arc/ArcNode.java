@@ -1,8 +1,9 @@
 package fortune.sweep.arc;
 
+import util.Stack;
 import fortune.sweep.Algorithm;
 import fortune.sweep.events.CirclePoint;
-import fortune.sweep.events.EventQueue;
+import fortune.sweep.events.HistoryEventQueue;
 import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 
@@ -11,6 +12,7 @@ public class ArcNode extends ParabolaPoint
 	private ArcNode next, prev;
 	private CirclePoint circlePoint;
 	private Point startOfTrace;
+	private Stack<Point> startOfTraceBackup = new Stack<Point>();
 
 	public ArcNode(Point point)
 	{
@@ -57,19 +59,20 @@ public class ArcNode extends ParabolaPoint
 		this.startOfTrace = startOfTrace;
 	}
 
-	public void checkCircle(EventQueue eventqueue)
+	public void checkCircle(HistoryEventQueue eventQueue)
 	{
 		if (prev != null && next != null) {
 			circlePoint = calculateCenter(next, this, prev);
-			if (circlePoint != null)
-				eventqueue.insert(circlePoint);
+			if (circlePoint != null) {
+				eventQueue.insert(circlePoint);
+			}
 		}
 	}
 
-	public void removeCircle(EventQueue eventqueue)
+	public void removeCircle(HistoryEventQueue eventQueue)
 	{
 		if (circlePoint != null) {
-			eventqueue.remove(circlePoint);
+			eventQueue.remove(circlePoint);
 			circlePoint = null;
 		}
 	}
@@ -79,50 +82,70 @@ public class ArcNode extends ParabolaPoint
 		if (startOfTrace != null) {
 			algorithm.getVoronoi().addLine(new Edge(startOfTrace, point));
 			algorithm.getDelaunay().add(new Edge(this, next));
+			startOfTraceBackup.push(startOfTrace);
 			startOfTrace = null;
 		}
 	}
+	
+	public void uncompleteTrace()
+	{
+		startOfTrace = startOfTraceBackup.pop();
+	}
 
-	public void insert(ParabolaPoint parabolapoint, double sline,
-			EventQueue eventqueue) throws Exception
+	public void insert(ParabolaPoint parabolaPoint, double sweepX,
+			HistoryEventQueue eventQueue) throws MathException
 	{
 		boolean split = true;
 		if (next != null) {
-			next.init(sline);
-			if (sline > next.getX() && sline > getX()) {
+			next.init(sweepX);
+			if (sweepX > next.getX() && sweepX > getX()) {
 				double xs[] = solveQuadratic(getA() - next.getA(), getB()
 						- next.getB(), getC() - next.getC());
-				if (xs[0] <= parabolapoint.realX() && xs[0] != xs[1])
+				if (xs[0] <= parabolaPoint.realX() && xs[0] != xs[1]) {
 					split = false;
+				}
 			} else {
 				split = false;
 			}
 		}
 
 		if (split) {
-			removeCircle(eventqueue);
+			removeCircle(eventQueue);
 
-			ArcNode arcnode = new ArcNode(parabolapoint);
+			/*
+			 * insert new arc and update pointers
+			 */
+
+			ArcNode arcnode = new ArcNode(parabolaPoint);
 			arcnode.next = new ArcNode(this);
 			arcnode.prev = this;
 			arcnode.next.next = next;
 			arcnode.next.prev = arcnode;
 
-			if (next != null)
+			if (next != null) {
 				next.prev = arcnode.next;
+			}
 
 			next = arcnode;
 
-			checkCircle(eventqueue);
-			next.next.checkCircle(eventqueue);
+			/*
+			 * circle events
+			 */
+
+			checkCircle(eventQueue);
+			next.next.checkCircle(eventQueue);
+
+			/*
+			 * traces
+			 */
 
 			next.next.startOfTrace = startOfTrace;
-			startOfTrace = new Point(sline - f(parabolapoint.getY()),
-					parabolapoint.getY());
-			next.startOfTrace = new Point(sline - f(parabolapoint.getY()),
-					parabolapoint.getY());
+			startOfTrace = new Point(sweepX - f(parabolaPoint.getY()),
+					parabolaPoint.getY());
+			next.startOfTrace = new Point(sweepX - f(parabolaPoint.getY()),
+					parabolaPoint.getY());
 		} else {
-			next.insert(parabolapoint, sline, eventqueue);
+			next.insert(parabolaPoint, sweepX, eventQueue);
 		}
 	}
 

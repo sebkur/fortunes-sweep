@@ -82,22 +82,22 @@ public class ParabolaPoint extends Point
 
 	public double f(double y)
 	{
-		return a * y  * y + b * y + c;
+		return a * y * y + b * y + c;
 	}
 
 	public static double[] solveQuadratic(double da, double db, double dc)
-			throws Exception
+			throws MathException
 	{
 		double ad[] = new double[2];
 		double d3 = db * db - 4D * da * dc;
 		if (d3 < 0.0D) {
-			throw new Exception();
+			throw new MathException();
 		}
 		if (da == 0.0D) {
 			if (db != 0.0D) {
 				ad[0] = -dc / db;
 			} else {
-				throw new Exception();
+				throw new MathException();
 			}
 		} else {
 			double d4 = Math.sqrt(d3);

@@ -29,7 +29,7 @@ public class ArcNodeWalker
 									current.getB() - next.getB(),
 									current.getC() - next.getC());
 							y2 = ad[0];
-						} catch (Exception e) {
+						} catch (MathException e) {
 							y2 = y1;
 							System.out
 									.println("*** error: No parabola intersection while painting arc - SLine: "

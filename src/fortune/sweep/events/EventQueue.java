@@ -56,9 +56,9 @@ public class EventQueue
 		points.add(eventPoint);
 	}
 
-	public synchronized void remove(EventPoint eventPoint)
+	public synchronized boolean remove(EventPoint eventPoint)
 	{
-		points.remove(eventPoint);
+		return points.remove(eventPoint);
 	}
 
 	public synchronized EventPoint top()

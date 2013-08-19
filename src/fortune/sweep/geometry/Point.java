@@ -1,6 +1,5 @@
 package fortune.sweep.geometry;
 
-
 public class Point
 {
 
@@ -52,6 +51,21 @@ public class Point
 		}
 		Point o = (Point) other;
 		return o.getX() == getX() && o.getY() == getY();
+	}
+
+	@Override
+	public String toString()
+	{
+		return x + ", " + y;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		long bitsX = Double.doubleToLongBits(x);
+		long bitsY = Double.doubleToLongBits(x);
+		long bits = bitsX + bitsY;
+		return (int) (bits ^ (bits >>> 32));
 	}
 
 }
