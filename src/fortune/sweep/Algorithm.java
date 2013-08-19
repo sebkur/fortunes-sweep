@@ -129,6 +129,7 @@ public class Algorithm
 		xPos = 0;
 		arcs = new ArcTree();
 		events = new EventQueue();
+		currentEvent = null;
 		voronoi.clear();
 		delaunay = new Delaunay();
 		for (Point point : sites) {
