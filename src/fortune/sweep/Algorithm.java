@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import util.Stack;
+
 import fortune.sweep.arc.ArcNode;
 import fortune.sweep.arc.ArcTree;
 import fortune.sweep.events.CirclePoint;
@@ -30,7 +32,7 @@ public class Algorithm
 	private HistoryEventQueue events;
 	private ArcTree arcs;
 
-	private List<EventPoint> executedEvents;
+	private Stack<EventPoint> executedEvents;
 
 	private List<AlgorithmWatcher> watchers = new ArrayList<AlgorithmWatcher>();
 
@@ -136,7 +138,7 @@ public class Algorithm
 		xPos = 0;
 		arcs = new ArcTree();
 		events = new HistoryEventQueue(this);
-		executedEvents = new ArrayList<EventPoint>();
+		executedEvents = new Stack<EventPoint>();
 		currentEvent = null;
 		voronoi.clear();
 		delaunay = new Delaunay();
@@ -203,12 +205,11 @@ public class Algorithm
 		 * Go through executed events and revert everything within the interval
 		 */
 		while (executedEvents.size() > 0) {
-			EventPoint lastEvent = executedEvents
-					.get(executedEvents.size() - 1);
+			EventPoint lastEvent = executedEvents.top();
 			if (!(lastEvent.getX() >= xPos && lastEvent.getX() <= xPosBefore)) {
 				break;
 			}
-			executedEvents.remove(executedEvents.size() - 1);
+			executedEvents.pop();
 			if (lastEvent instanceof SitePoint) {
 				SitePoint sitePoint = (SitePoint) lastEvent;
 				revert(sitePoint);
@@ -257,7 +258,7 @@ public class Algorithm
 
 	private void process(EventPoint eventPoint)
 	{
-		executedEvents.add(eventPoint);
+		executedEvents.push(eventPoint);
 		if (eventPoint instanceof CirclePoint) {
 			CirclePoint circlePoint = (CirclePoint) eventPoint;
 			process(circlePoint);
