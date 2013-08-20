@@ -21,4 +21,13 @@ public class Edge
 		return p2;
 	}
 
+	public boolean equals(Object other)
+	{
+		if (!(other instanceof Edge)) {
+			return false;
+		}
+		Edge edge = (Edge) other;
+		return edge.p1.equals(p1) && edge.p2.equals(p2);
+	}
+
 }

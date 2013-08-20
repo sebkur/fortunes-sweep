@@ -14,6 +14,7 @@ import fortune.sweep.events.EventQueueModification;
 import fortune.sweep.events.EventQueueModification.Type;
 import fortune.sweep.events.HistoryEventQueue;
 import fortune.sweep.events.SitePoint;
+import fortune.sweep.geometry.Edge;
 import fortune.sweep.geometry.Point;
 
 public class Algorithm
@@ -350,15 +351,15 @@ public class Algorithm
 		// point is the position of the new voronoi vertex
 		Point point = new Point(circlePoint.getX() - circlePoint.getRadius(),
 				circlePoint.getY());
-		// add two new voronoi edges
+		// Add two new voronoi edges
 		prev.completeTrace(this, point);
 		arc.completeTrace(this, point);
-		// add a new trace
+		// Add a new trace
 		prev.setStartOfTrace(point);
-		// change arc pointers
+		// Change arc pointers
 		prev.setNext(next);
 		next.setPrevious(prev);
-		// dismiss now invalid circle events
+		// Dismiss now invalid circle events
 		if (prev.getCirclePoint() != null) {
 			getEventQueue().remove(prev.getCirclePoint());
 			prev.setCirclePoint(null);
@@ -367,24 +368,30 @@ public class Algorithm
 			getEventQueue().remove(next.getCirclePoint());
 			next.setCirclePoint(null);
 		}
-		// check for new circle events
+		// Check for new circle events
 		prev.checkCircle(getEventQueue());
 		next.checkCircle(getEventQueue());
 	}
 
 	private void revert(CirclePoint circlePoint)
 	{
-		// reinsert arc between previous and next
+		// Reinsert arc between previous and next
 		ArcNode arc = circlePoint.getArc();
 		arc.getNext().setPrevious(arc);
 		arc.getPrevious().setNext(arc);
-		// restore trace starting at removed voronoi vertex
+		// Restore trace starting at removed voronoi vertex
 		Point point = new Point(circlePoint.getX() - circlePoint.getRadius(),
 				circlePoint.getY());
 		arc.uncompleteTrace();
 		arc.getPrevious().uncompleteTrace();
-		// remove vertex/edges from vornoi diagram
+		// Remove vertex/edges from voronoi diagram
 		voronoi.removeLinesFromVertex(point);
+		// Remove edge from delaunay triangulation. Remove each each twice with
+		// inverted coordinates to make sure equals() works with one of them.
+		delaunay.remove(new Edge(arc, arc.getPrevious()));
+		delaunay.remove(new Edge(arc, arc.getNext()));
+		delaunay.remove(new Edge(arc.getPrevious(), arc));
+		delaunay.remove(new Edge(arc.getNext(), arc));
 	}
 
 }

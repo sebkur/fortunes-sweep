@@ -68,8 +68,8 @@ public class AlgorithmPainter
 	private int colorSpikes = 0x000000;
 	private int colorSpikeIntersections = 0xff0000;
 
-	private int colorVornoiSegments = 0x0000ff;
-	private int colorVornoiTraces = 0xff0000;
+	private int colorVoronoiSegments = 0x0000ff;
+	private int colorVoronoiTraces = 0xff0000;
 	private int colorArcs = 0x000000;
 	private int colorCircles = 0x000000;
 	private int colorDelaunay = 0x999999;
@@ -117,7 +117,7 @@ public class AlgorithmPainter
 			painter.paint(sites.get(i));
 		}
 
-		painter.setColor(new Color(colorVornoiSegments));
+		painter.setColor(new Color(colorVoronoiSegments));
 		if (config.isDrawVoronoiLines()) {
 			for (int i = 0; i < edges.size(); i++) {
 				painter.paint(edges.get(i));
@@ -260,7 +260,7 @@ public class AlgorithmPainter
 		Point startOfTrace = current.getStartOfTrace();
 		if (startOfTrace != null) {
 			double beachX = sweepX - current.f(beachY);
-			painter.setColor(new Color(colorVornoiTraces));
+			painter.setColor(new Color(colorVoronoiTraces));
 			painter.drawLine(startOfTrace.getX(), startOfTrace.getY(), beachX,
 					beachY);
 		}
