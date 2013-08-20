@@ -66,10 +66,19 @@ public class HistoryEventQueue extends EventQueue
 		}
 		EventQueueModification modification = modifications
 				.remove(modifications.size() - 1);
+		// Reverse EventQueue modification
 		if (modification.getType() == Type.ADD) {
+			// Remove if the event was added
 			super.remove(modification.getEventPoint());
 		} else if (modification.getType() == Type.REMOVE) {
+			// Insert if the event was removed
 			super.insert(modification.getEventPoint());
+			// Revert pointers of arcs to their circle events.
+			if (modification.getEventPoint() instanceof CirclePoint) {
+				CirclePoint circlePoint = (CirclePoint) modification
+						.getEventPoint();
+				circlePoint.getArc().setCirclePoint(circlePoint);
+			}
 		}
 
 		return modification;
