@@ -41,7 +41,7 @@ public class HistoryEventQueue extends EventQueue
 	public synchronized EventPoint pop()
 	{
 		EventPoint eventPoint = top();
-		modifications.add(new EventQueueModification(algorithm.getSweepX(),
+		modifications.add(new EventQueueModification(eventPoint.getX(),
 				Type.REMOVE, eventPoint));
 		return super.pop();
 	}
