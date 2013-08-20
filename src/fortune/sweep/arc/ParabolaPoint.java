@@ -38,35 +38,35 @@ public class ParabolaPoint extends Point
 		return c;
 	}
 
-	public CirclePoint calculateCenter(Point point, ArcNode arcnode,
-			Point point1)
+	public CirclePoint calculateCenter(Point next, ArcNode arcnode,
+			Point prev)
 	{
 		CirclePoint circlepoint = null;
-		Point point2 = new Point(arcnode.getX() - point.getX(), arcnode.getY()
-				- point.getY());
-		Point point3 = new Point(point1.getX() - arcnode.getX(), point1.getY()
+		Point p1 = new Point(arcnode.getX() - next.getX(), arcnode.getY()
+				- next.getY());
+		Point p2 = new Point(prev.getX() - arcnode.getX(), prev.getY()
 				- arcnode.getY());
-		if (point3.getY() * point2.getX() > point3.getX() * point2.getY()) {
-			double d = -point2.getX() / point2.getY();
-			double d1 = (point.getY() + point2.getY() / 2D) - d
-					* (point.getX() + point2.getX() / 2D);
-			double d2 = -point3.getX() / point3.getY();
-			double d3 = (arcnode.getY() + point3.getY() / 2D) - d2
-					* (arcnode.getX() + point3.getX() / 2D);
-			double d4;
-			double d5;
-			if (point2.getY() == 0.0D) {
-				d4 = point.getX() + point2.getX() / 2D;
-				d5 = d2 * d4 + d3;
-			} else if (point3.getY() == 0.0D) {
-				d4 = arcnode.getX() + point3.getX() / 2D;
-				d5 = d * d4 + d1;
+		if (p2.getY() * p1.getX() > p2.getX() * p1.getY()) {
+			double d = -p1.getX() / p1.getY();
+			double d1 = (next.getY() + p1.getY() / 2D) - d
+					* (next.getX() + p1.getX() / 2D);
+			double d2 = -p2.getX() / p2.getY();
+			double d3 = (arcnode.getY() + p2.getY() / 2D) - d2
+					* (arcnode.getX() + p2.getX() / 2D);
+			double cx;
+			double cy;
+			if (p1.getY() == 0.0D) {
+				cx = next.getX() + p1.getX() / 2D;
+				cy = d2 * cx + d3;
+			} else if (p2.getY() == 0.0D) {
+				cx = arcnode.getX() + p2.getX() / 2D;
+				cy = d * cx + d1;
 			} else {
-				d4 = (d3 - d1) / (d - d2);
-				d5 = d * d4 + d1;
+				cx = (d3 - d1) / (d - d2);
+				cy = d * cx + d1;
 			}
-			// d4, d5 is the center of the circle through three points
-			circlepoint = new CirclePoint(d4, d5, arcnode);
+			// cx, cy is the center of the circle through three points
+			circlepoint = new CirclePoint(cx, cy, arcnode);
 		}
 		return circlepoint;
 	}
