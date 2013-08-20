@@ -20,20 +20,51 @@ public class Algorithm
 {
 	private static final int PLAY_N_PIXELS_BEYOND_SCREEN = 1000;
 
+	/*
+	 * Data structures to maintain voronoi diagram and delaunay triangulation.
+	 */
 	private Voronoi voronoi;
 	private Delaunay delaunay;
 
-	private double xPos;
-	private int maxX;
+	/*
+	 * Current position of the sweepline.
+	 */
+	private double sweepX;
+
+	/*
+	 * Dimension of the area of interest.
+	 */
 	private int height;
+	private int width;
 
+	/*
+	 * A list with the initial sites
+	 */
 	private List<Point> sites;
-	private EventPoint currentEvent;
-	private HistoryEventQueue events;
-	private ArcTree arcs;
 
+	/*
+	 * Event queue with site and circle events plus a special pointer to the
+	 * currently active event.
+	 */
+	private HistoryEventQueue events;
+	private EventPoint currentEvent;
+
+	/*
+	 * This maintains a list of events that have been executed during the
+	 * algorithm so that exactly these events may be reverted when playing the
+	 * algorithm backwards.
+	 */
 	private Stack<EventPoint> executedEvents;
 
+	/*
+	 * The beachline data structure.
+	 */
+	private ArcTree arcs;
+
+	/*
+	 * Watchers that need to be notified once the algorithm moved to a new
+	 * state.
+	 */
 	private List<AlgorithmWatcher> watchers = new ArrayList<AlgorithmWatcher>();
 
 	public Algorithm()
@@ -43,14 +74,50 @@ public class Algorithm
 		init();
 	}
 
-	public int getMaxX()
+	/*
+	 * Public API
+	 */
+
+	public void addSite(Point point)
 	{
-		return maxX;
+		sites.add(point);
+		voronoi.addSite(point);
+		voronoi.checkDegenerate();
+		events.insert(new SitePoint(point));
 	}
 
-	public void setMaxX(int maxX)
+	public void setSites(List<Point> sites)
 	{
-		this.maxX = maxX;
+		this.sites = sites;
+		voronoi = new Voronoi();
+		for (Point point : sites) {
+			voronoi.addSite(point);
+		}
+		restart();
+	}
+
+	public void addWatcher(AlgorithmWatcher watcher)
+	{
+		watchers.add(watcher);
+	}
+
+	public void removeWatcher(AlgorithmWatcher watcher)
+	{
+		watchers.remove(watcher);
+	}
+
+	/*
+	 * Dimension getters / setters
+	 */
+
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public void setWidth(int width)
+	{
+		this.width = width;
 	}
 
 	public int getHeight()
@@ -63,9 +130,13 @@ public class Algorithm
 		this.height = height;
 	}
 
+	/*
+	 * Various getters
+	 */
+
 	public double getSweepX()
 	{
-		return xPos;
+		return sweepX;
 	}
 
 	public Voronoi getVoronoi()
@@ -93,38 +164,14 @@ public class Algorithm
 		return arcs;
 	}
 
-	public void addSite(Point point)
-	{
-		sites.add(point);
-		voronoi.addSite(point);
-		voronoi.checkDegenerate();
-		events.insert(new SitePoint(point));
-	}
-
-	public void addWatcher(AlgorithmWatcher watcher)
-	{
-		watchers.add(watcher);
-	}
-
-	public void removeWatcher(AlgorithmWatcher watcher)
-	{
-		watchers.remove(watcher);
-	}
-
 	public List<Point> getSites()
 	{
 		return Collections.unmodifiableList(sites);
 	}
 
-	public void setSites(List<Point> sites)
-	{
-		this.sites = sites;
-		voronoi = new Voronoi();
-		for (Point point : sites) {
-			voronoi.addSite(point);
-		}
-		restart();
-	}
+	/*
+	 * Internal methods
+	 */
 
 	private void notifyWatchers()
 	{
@@ -133,9 +180,9 @@ public class Algorithm
 		}
 	}
 
-	public synchronized void init()
+	private synchronized void init()
 	{
-		xPos = 0;
+		sweepX = 0;
 		arcs = new ArcTree();
 		events = new HistoryEventQueue(this);
 		executedEvents = new Stack<EventPoint>();
@@ -148,21 +195,25 @@ public class Algorithm
 		}
 	}
 
+	/*
+	 * Sweepline control
+	 */
+
 	public synchronized boolean nextPixel()
 	{
-		if (events.size() == 0 || xPos < events.top().getX()) {
-			xPos++;
+		if (events.size() == 0 || sweepX < events.top().getX()) {
+			sweepX++;
 			currentEvent = null;
 		}
 
-		double xPosOld = xPos;
+		double xPosOld = sweepX;
 		while (events.size() != 0 && xPosOld >= events.top().getX()) {
 			EventPoint eventPoint = events.pop();
-			xPos = eventPoint.getX();
+			sweepX = eventPoint.getX();
 			process(eventPoint);
 			currentEvent = eventPoint;
 		}
-		xPos = xPosOld;
+		sweepX = xPosOld;
 
 		notifyWatchers();
 		return !isFinshed();
@@ -170,11 +221,11 @@ public class Algorithm
 
 	public synchronized boolean previousPixel()
 	{
-		if (xPos <= 0) {
+		if (sweepX <= 0) {
 			return false;
 		}
-		double xPosBefore = xPos;
-		xPos--;
+		double xPosBefore = sweepX;
+		sweepX--;
 		currentEvent = null;
 
 		/*
@@ -184,16 +235,16 @@ public class Algorithm
 			EventQueueModification mod = events.getLatestModification();
 			EventPoint event = events.getLatestModification().getEventPoint();
 			if (event instanceof SitePoint) {
-				if (!(event.getX() >= xPos && event.getX() <= xPosBefore)) {
+				if (!(event.getX() >= sweepX && event.getX() <= xPosBefore)) {
 					break;
 				}
 			} else if (event instanceof CirclePoint) {
 				if (mod.getType() == Type.REMOVE) {
-					if (!(mod.getX() >= xPos && mod.getX() <= xPosBefore)) {
+					if (!(mod.getX() >= sweepX && mod.getX() <= xPosBefore)) {
 						break;
 					}
 				} else if (mod.getType() == Type.ADD) {
-					if (!(mod.getX() >= xPos && mod.getX() <= xPosBefore)) {
+					if (!(mod.getX() >= sweepX && mod.getX() <= xPosBefore)) {
 						break;
 					}
 				}
@@ -206,7 +257,7 @@ public class Algorithm
 		 */
 		while (executedEvents.size() > 0) {
 			EventPoint lastEvent = executedEvents.top();
-			if (!(lastEvent.getX() >= xPos && lastEvent.getX() <= xPosBefore)) {
+			if (!(lastEvent.getX() >= sweepX && lastEvent.getX() <= xPosBefore)) {
 				break;
 			}
 			executedEvents.pop();
@@ -220,24 +271,24 @@ public class Algorithm
 		}
 
 		notifyWatchers();
-		return xPos > 0;
+		return sweepX > 0;
 	}
 
 	public synchronized boolean isFinshed()
 	{
-		return !(events.size() != 0 || xPos < PLAY_N_PIXELS_BEYOND_SCREEN
-				+ maxX);
+		return !(events.size() != 0 || sweepX < PLAY_N_PIXELS_BEYOND_SCREEN
+				+ width);
 	}
 
 	public synchronized void nextEvent()
 	{
 		if (events.size() > 0) {
 			EventPoint eventPoint = events.pop();
-			xPos = eventPoint.getX();
+			sweepX = eventPoint.getX();
 			process(eventPoint);
 			currentEvent = eventPoint;
-		} else if (xPos < maxX) {
-			xPos = maxX;
+		} else if (sweepX < width) {
+			sweepX = width;
 			currentEvent = null;
 		}
 		notifyWatchers();
@@ -256,17 +307,38 @@ public class Algorithm
 		notifyWatchers();
 	}
 
+	/*
+	 * Internal event processing
+	 */
+
 	private void process(EventPoint eventPoint)
 	{
+		// Remember that this event has been executed
 		executedEvents.push(eventPoint);
-		if (eventPoint instanceof CirclePoint) {
-			CirclePoint circlePoint = (CirclePoint) eventPoint;
-			process(circlePoint);
-		} else {
+
+		// Actually execute the event depending on its type
+		if (eventPoint instanceof SitePoint) {
 			SitePoint sitePoint = (SitePoint) eventPoint;
 			process(sitePoint);
+		} else if (eventPoint instanceof CirclePoint) {
+			CirclePoint circlePoint = (CirclePoint) eventPoint;
+			process(circlePoint);
 		}
 	}
+
+	// Site events
+
+	private void process(SitePoint sitePoint)
+	{
+		getArcs().insert(sitePoint, getSweepX(), getEventQueue());
+	}
+
+	private void revert(SitePoint sitePoint)
+	{
+		getArcs().remove(sitePoint);
+	}
+
+	// Circle events
 
 	private void process(CirclePoint circlePoint)
 	{
@@ -313,16 +385,6 @@ public class Algorithm
 		arc.getPrevious().uncompleteTrace();
 		// remove vertex/edges from vornoi diagram
 		voronoi.removeLinesFromVertex(point);
-	}
-
-	private void process(SitePoint sitePoint)
-	{
-		getArcs().insert(sitePoint, getSweepX(), getEventQueue());
-	}
-
-	private void revert(SitePoint sitePoint)
-	{
-		getArcs().remove(sitePoint);
 	}
 
 }

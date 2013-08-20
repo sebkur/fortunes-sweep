@@ -102,7 +102,7 @@ public class SwingFortune extends JFrame implements Runnable
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-				algorithm.setMaxX(canvas.getWidth());
+				algorithm.setWidth(canvas.getWidth());
 				algorithm.setHeight(canvas.getHeight());
 			}
 
