@@ -1,10 +1,12 @@
 package fortune.sweep.gui.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -94,6 +96,7 @@ public class SwingFortune extends JFrame implements Runnable
 		settings = new Settings(canvas, config);
 
 		SweepControl sweepControl = new SweepControl(algorithm);
+		sweepControl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		Box south = new Box(BoxLayout.Y_AXIS);		
 		south.add(sweepControl);
