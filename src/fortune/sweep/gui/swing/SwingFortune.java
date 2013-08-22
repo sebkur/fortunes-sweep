@@ -2,6 +2,7 @@ package fortune.sweep.gui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.gui.Config;
+import fortune.sweep.gui.swing.action.ExportBitmapAction;
 import fortune.sweep.gui.swing.action.OpenAction;
 import fortune.sweep.gui.swing.action.QuitAction;
 import fortune.sweep.gui.swing.action.SaveAction;
@@ -65,6 +67,8 @@ public class SwingFortune extends JFrame implements Runnable
 		menuFile.add(open);
 		JMenuItem save = new JMenuItem(new SaveAction(this));
 		menuFile.add(save);
+		JMenuItem exportBitmap = new JMenuItem(new ExportBitmapAction(this));
+		menuFile.add(exportBitmap);
 		JMenuItem quit = new JMenuItem(new QuitAction());
 		menuFile.add(quit);
 
@@ -226,5 +230,10 @@ public class SwingFortune extends JFrame implements Runnable
 	public boolean isRunning()
 	{
 		return running;
+	}
+	
+	public Dimension getCanvasSize()
+	{
+		return canvas.getSize();
 	}
 }
