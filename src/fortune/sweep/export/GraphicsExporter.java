@@ -16,8 +16,8 @@ import fortune.sweep.gui.swing.AwtPainter;
 public class GraphicsExporter
 {
 
-	public static void exportPNG(File file, Algorithm algorithm, int width,
-			int height) throws IOException
+	public static void exportPNG(File file, Algorithm algorithm, Config config,
+			int width, int height) throws IOException
 	{
 		BufferedImage image = new BufferedImage(width, height,
 				BufferedImage.TYPE_4BYTE_ABGR);
@@ -27,12 +27,6 @@ public class GraphicsExporter
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
 		AwtPainter painter = new AwtPainter(graphics);
-
-		Config config = new Config();
-		config.setDrawBeach(true);
-		config.setDrawCircles(true);
-		config.setDrawDelaunay(false);
-		config.setDrawVoronoiLines(true);
 
 		AlgorithmPainter algorithmPainter = new AlgorithmPainter(algorithm,
 				config, painter);

@@ -9,6 +9,7 @@ import javax.swing.JFileChooser;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.export.GraphicsExporter;
+import fortune.sweep.gui.Config;
 import fortune.sweep.gui.swing.FileFilterBitmap;
 import fortune.sweep.gui.swing.SwingFortune;
 
@@ -40,11 +41,12 @@ public class ExportBitmapAction extends SwingFortuneAction
 		swingFortune.setLastActiveDirectory(file.getParentFile());
 
 		Algorithm algorithm = swingFortune.getAlgorithm();
+		Config config = swingFortune.getConfig();
 		Dimension dimension = swingFortune.getCanvasSize();
 
 		try {
-			GraphicsExporter.exportPNG(file, algorithm, dimension.width,
-					dimension.height);
+			GraphicsExporter.exportPNG(file, algorithm, config,
+					dimension.width, dimension.height);
 		} catch (IOException ex) {
 			System.out.println("unable to export image: " + ex.getMessage());
 		}

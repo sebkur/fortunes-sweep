@@ -36,6 +36,7 @@ public class SwingFortune extends JFrame implements Runnable
 	private Algorithm algorithm;
 	private Canvas canvas;
 	private Controls controls;
+	private Config config;
 
 	private JPanel main;
 	private JMenuBar menu;
@@ -88,7 +89,7 @@ public class SwingFortune extends JFrame implements Runnable
 		 */
 
 		algorithm = new Algorithm();
-		Config config = new Config();
+		config = new Config();
 
 		config.setDrawCircles(true);
 		config.setDrawBeach(true);
@@ -235,5 +236,10 @@ public class SwingFortune extends JFrame implements Runnable
 	public Dimension getCanvasSize()
 	{
 		return canvas.getSize();
+	}
+	
+	public Config getConfig()
+	{
+		return config;
 	}
 }
