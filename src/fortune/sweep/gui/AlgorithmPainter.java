@@ -102,8 +102,8 @@ public class AlgorithmPainter
 	private void paintDelaunay(Delaunay d)
 	{
 		painter.setColor(new Color(colorDelaunay));
-		for (Edge e : d) {
-			painter.paint(e);
+		for (int i = 0; i < d.size(); i++) {
+			painter.paint(d.get(i));
 		}
 	}
 
