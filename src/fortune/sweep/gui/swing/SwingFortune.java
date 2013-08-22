@@ -5,6 +5,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -91,11 +93,18 @@ public class SwingFortune extends JFrame implements Runnable
 		controls = new Controls(this, algorithm);
 		settings = new Settings(canvas, config);
 
+		SweepControl sweepControl = new SweepControl(algorithm);
+		
+		Box south = new Box(BoxLayout.Y_AXIS);		
+		south.add(sweepControl);
+		south.add(controls);
+		
 		main.add(settings, BorderLayout.NORTH);
 		main.add(canvas, BorderLayout.CENTER);
-		main.add(controls, BorderLayout.SOUTH);
+		main.add(south, BorderLayout.SOUTH);
 
 		algorithm.addWatcher(canvas);
+		algorithm.addWatcher(sweepControl);
 
 		canvas.addComponentListener(new ComponentAdapter() {
 
