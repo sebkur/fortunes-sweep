@@ -6,7 +6,13 @@ Here is a [live demo of the applet][applet].
 
 The applet was created by Benny Kjær Nielsen and Allan Odgaard in spring of 2000 following a course in Computational Geometry taugbt by Pawel Winter at [DIKU][].
 
+The source code has then been reworked, refactored and improved by Sebastian Kürten.
+It now works as a standalone Swing application rather than an applet.
+Also there is a port via GWT to Javascript.
+
 # License
+
+The original authors state the following:
 
 Permission to copy, use, modify, sell and distribute this software is granted. This software is provided “as is” without express or implied warranty, and with no claim as to its suitability for any purpose.
 
@@ -20,6 +26,8 @@ java -cp bin:lib/\*:lib/batik/\* fortune.sweep.gui.swing.SwingFortune
 The purpose of the source is to visualize the algorithm, it is not a good base for an effecient implementation of the algorithm (it does not run in O(n log n) time).
 
 The original source was initially lost and recovered using a Java decompiler so most variable names are nonsensical.
+
+For most of the code this is not true anymore since the code has been heavily refactored.
 
 
 [Fortune]: http://ect.bell-labs.com/who/sjf/ "Steven Fortune"
