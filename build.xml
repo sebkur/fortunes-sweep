@@ -8,6 +8,7 @@
 	<property name="build" location="bin" />
 	<property name="dist" location="dist" />
 	<property name="lib" location="lib" />
+	<property name="lib.batik" location="lib/batik" />
 	<property name="doc" location="javadoc" />
 
 	<target name="init">
@@ -32,6 +33,9 @@
 		<javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source" includeantruntime="false">
 			<classpath>
 				<fileset dir="${lib}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${lib.batik}">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
