@@ -86,11 +86,27 @@ public class SvgPainter implements Painter
 		if (points.size() < 2) {
 			return;
 		}
-		for (int i = 0; i < points.size() - 1; i++) {
-			Coordinate c1 = points.get(i);
-			Coordinate c2 = points.get(i + 1);
-			drawLine(c1.getX(), c1.getY(), c2.getX(), c2.getY());
+
+		StringBuilder strb = new StringBuilder();
+		Coordinate start = points.get(0);
+		strb.append(String.format(Locale.US, "M %f,%f", start.getX(),
+				start.getY()));
+
+		for (int i = 1; i < points.size(); i++) {
+			Coordinate c = points.get(i);
+			strb.append(String.format(Locale.US, " %f,%f", c.getX(), c.getY()));
 		}
+
+		Element path = doc.createElementNS(svgNS, "path");
+		path.setAttributeNS(
+				null,
+				"style",
+				"fill:none;stroke:"
+						+ getCurrentColor()
+						+ ";stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1");
+		path.setAttributeNS(null, "d", strb.toString());
+
+		root.appendChild(path);
 	}
 
 	@Override
