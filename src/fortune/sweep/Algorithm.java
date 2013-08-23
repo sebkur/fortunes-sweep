@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import util.Stack;
-
 import fortune.sweep.arc.ArcNode;
 import fortune.sweep.arc.ArcTree;
 import fortune.sweep.events.CirclePoint;
@@ -202,8 +201,18 @@ public class Algorithm
 
 	public synchronized boolean nextPixel()
 	{
+		return moveForward(1);
+	}
+
+	public synchronized boolean previousPixel()
+	{
+		return moveBackward(1);
+	}
+
+	public synchronized boolean moveForward(double amount)
+	{
 		if (events.size() == 0 || sweepX < events.top().getX()) {
-			sweepX++;
+			sweepX += amount;
 			currentEvent = null;
 		}
 
@@ -220,13 +229,13 @@ public class Algorithm
 		return !isFinshed();
 	}
 
-	public synchronized boolean previousPixel()
+	public synchronized boolean moveBackward(double amount)
 	{
 		if (sweepX <= 0) {
 			return false;
 		}
 		double xPosBefore = sweepX;
-		sweepX--;
+		sweepX -= amount;
 		currentEvent = null;
 
 		/*
@@ -273,6 +282,17 @@ public class Algorithm
 
 		notifyWatchers();
 		return sweepX > 0;
+	}
+
+	public synchronized void setSweep(double x)
+	{
+		if (sweepX < x) {
+			moveForward(x - sweepX);
+		} else if (sweepX > x) {
+			moveBackward(sweepX - x);
+		}
+
+		notifyWatchers();
 	}
 
 	public synchronized boolean isFinshed()

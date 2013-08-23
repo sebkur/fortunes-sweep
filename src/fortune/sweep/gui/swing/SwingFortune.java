@@ -105,11 +105,11 @@ public class SwingFortune extends JFrame implements Runnable
 
 		SweepControl sweepControl = new SweepControl(algorithm);
 		sweepControl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		
-		Box south = new Box(BoxLayout.Y_AXIS);		
+
+		Box south = new Box(BoxLayout.Y_AXIS);
 		south.add(sweepControl);
 		south.add(controls);
-		
+
 		main.add(settings, BorderLayout.NORTH);
 		main.add(canvas, BorderLayout.CENTER);
 		main.add(south, BorderLayout.SOUTH);
@@ -235,12 +235,12 @@ public class SwingFortune extends JFrame implements Runnable
 	{
 		return running;
 	}
-	
+
 	public Dimension getCanvasSize()
 	{
 		return canvas.getSize();
 	}
-	
+
 	public Config getConfig()
 	{
 		return config;
