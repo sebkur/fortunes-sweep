@@ -18,12 +18,38 @@ public class HistoryEventQueue extends EventQueue
 		this.algorithm = algorithm;
 	}
 
-	@Override
-	public synchronized void insert(EventPoint eventPoint)
+	public synchronized boolean insertEvent(EventPoint eventPoint)
 	{
-		modifications.add(new EventQueueModification(algorithm.getSweepX(),
-				Type.ADD, eventPoint));
-		super.insert(eventPoint);
+		EventQueueModification modification = new EventQueueModification(
+				algorithm.getSweepX(), Type.ADD, eventPoint);
+		if (eventPoint instanceof CirclePoint) {
+			// Circle event should always get through
+			modifications.add(modification);
+			insert(eventPoint);
+			return true;
+		} else if (eventPoint instanceof SitePoint) {
+			// Site events should only be allowed if they will be inserted at
+			// the correct position. That's only if there's no event yet or if
+			// the latest modification is the insertion of a site event, too.
+			if (modifications.size() == 0) {
+				modifications.add(modification);
+				insert(eventPoint);
+				return true;
+			} else {
+				EventQueueModification latest = getLatestModification();
+				if (latest.getType() == Type.ADD
+						&& latest.getEventPoint() instanceof SitePoint) {
+					modifications.add(modification);
+					insert(eventPoint);
+					return true;
+				}
+			}
+			// TODO: now we cannot add any sites after the sweep began. This is
+			// a little restrictive. To relax this, we would have to make sure
+			// the eventsQueue and the modification list will be sane after late
+			// insertion.
+		}
+		return false;
 	}
 
 	@Override
@@ -72,7 +98,7 @@ public class HistoryEventQueue extends EventQueue
 			super.remove(modification.getEventPoint());
 		} else if (modification.getType() == Type.REMOVE) {
 			// Insert if the event was removed
-			super.insert(modification.getEventPoint());
+			insert(modification.getEventPoint());
 			// Revert pointers of arcs to their circle events.
 			if (modification.getEventPoint() instanceof CirclePoint) {
 				CirclePoint circlePoint = (CirclePoint) modification

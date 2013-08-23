@@ -64,7 +64,7 @@ public class ArcNode extends ParabolaPoint
 		if (prev != null && next != null) {
 			circlePoint = calculateCenter(next, this, prev);
 			if (circlePoint != null) {
-				eventQueue.insert(circlePoint);
+				eventQueue.insertEvent(circlePoint);
 			}
 		}
 	}

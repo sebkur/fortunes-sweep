@@ -80,10 +80,12 @@ public class Algorithm
 
 	public void addSite(Point point)
 	{
-		sites.add(point);
-		voronoi.addSite(point);
-		voronoi.checkDegenerate();
-		events.insert(new SitePoint(point));
+		boolean inserted = events.insertEvent(new SitePoint(point));
+		if (inserted) {
+			sites.add(point);
+			voronoi.addSite(point);
+			voronoi.checkDegenerate();
+		}
 	}
 
 	public void setSites(List<Point> sites)
@@ -190,8 +192,10 @@ public class Algorithm
 		voronoi.clear();
 		delaunay = new Delaunay();
 		for (Point point : sites) {
-			voronoi.addSite(point);
-			events.insert(new SitePoint(point));
+			boolean inserted = events.insertEvent(new SitePoint(point));
+			if (inserted) {
+				voronoi.addSite(point);
+			}
 		}
 	}
 
