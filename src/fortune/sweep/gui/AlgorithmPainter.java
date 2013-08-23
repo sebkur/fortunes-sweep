@@ -91,7 +91,8 @@ public class AlgorithmPainter
 		}
 
 		if (algorithm.getCurrentEvent() != null) {
-			paintEventPoint(algorithm.getCurrentEvent(), config.isDrawCircles(), true);
+			paintEventPoint(algorithm.getCurrentEvent(),
+					config.isDrawCircles(), true);
 		}
 
 		if (config.isDrawDelaunay()) {
@@ -134,7 +135,8 @@ public class AlgorithmPainter
 		}
 	}
 
-	private void paintEventPoint(EventPoint eventPoint, boolean drawCircles, boolean isActive)
+	private void paintEventPoint(EventPoint eventPoint, boolean drawCircles,
+			boolean isActive)
 	{
 		if (drawCircles || !(eventPoint instanceof CirclePoint)) {
 			if (eventPoint instanceof CirclePoint) {
@@ -146,14 +148,14 @@ public class AlgorithmPainter
 
 				if (isActive) {
 					painter.setColor(new Color(colorCircleEventPointsActive));
-				}else {					
+				} else {
 					painter.setColor(new Color(colorCircleEventPoints));
 				}
 				painter.paint(eventPoint);
 			} else {
 				if (isActive) {
 					painter.setColor(new Color(colorSiteActive));
-				}else {					
+				} else {
 					painter.setColor(new Color(colorSites));
 				}
 				painter.paint(eventPoint);
@@ -225,8 +227,8 @@ public class AlgorithmPainter
 		// snap debug
 	}
 
-	private void paintBeachlineArc(double yTop, double yBottom, ArcNode current,
-			double sweepX)
+	private void paintBeachlineArc(double yTop, double yBottom,
+			ArcNode current, double sweepX)
 	{
 		painter.setColor(new Color(colorArcs));
 		// y stepping for parabola approximation

@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import fortune.sweep.Algorithm;
 import fortune.sweep.gui.Config;
 import fortune.sweep.gui.swing.action.ExportBitmapAction;
+import fortune.sweep.gui.swing.action.ExportSvgAction;
 import fortune.sweep.gui.swing.action.OpenAction;
 import fortune.sweep.gui.swing.action.QuitAction;
 import fortune.sweep.gui.swing.action.SaveAction;
@@ -70,6 +71,8 @@ public class SwingFortune extends JFrame implements Runnable
 		menuFile.add(save);
 		JMenuItem exportBitmap = new JMenuItem(new ExportBitmapAction(this));
 		menuFile.add(exportBitmap);
+		JMenuItem exportSvg = new JMenuItem(new ExportSvgAction(this));
+		menuFile.add(exportSvg);
 		JMenuItem quit = new JMenuItem(new QuitAction());
 		menuFile.add(quit);
 
