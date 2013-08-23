@@ -1,7 +1,6 @@
 package fortune.sweep.gui;
 
-import fortune.sweep.geometry.Edge;
-import fortune.sweep.geometry.Point;
+import java.util.List;
 
 public interface Painter
 {
@@ -15,12 +14,10 @@ public interface Painter
 	
 	public void drawLine(double x1, double y1, double x2, double y2);
 	
+	public void drawPath(List<Coordinate> points);
+	
 	public void drawCircle(double x, double y, double radius);
 
 	public void fillCircle(double x, double y, double radius);
-
-	public void paint(Point p);
-
-	public void paint(Edge e);
 
 }

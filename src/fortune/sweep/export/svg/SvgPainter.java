@@ -1,14 +1,14 @@
 package fortune.sweep.export.svg;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fortune.sweep.geometry.Edge;
-import fortune.sweep.geometry.Point;
 import fortune.sweep.gui.Color;
+import fortune.sweep.gui.Coordinate;
 import fortune.sweep.gui.Painter;
 
 public class SvgPainter implements Painter
@@ -81,6 +81,19 @@ public class SvgPainter implements Painter
 	}
 
 	@Override
+	public void drawPath(List<Coordinate> points)
+	{
+		if (points.size() < 2) {
+			return;
+		}
+		for (int i = 0; i < points.size() - 1; i++) {
+			Coordinate c1 = points.get(i);
+			Coordinate c2 = points.get(i + 1);
+			drawLine(c1.getX(), c1.getY(), c2.getX(), c2.getY());
+		}
+	}
+
+	@Override
 	public void drawCircle(double x, double y, double radius)
 	{
 		Element circle = doc.createElementNS(svgNS, "circle");
@@ -106,22 +119,9 @@ public class SvgPainter implements Painter
 		root.appendChild(circle);
 	}
 
-	@Override
-	public void paint(Point p)
-	{
-		fillCircle(p.getX(), p.getY(), 3.5);
-	}
-
-	@Override
-	public void paint(Edge e)
-	{
-		Point p1 = e.getStart();
-		Point p2 = e.getEnd();
-		drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-	}
-
 	private String getCurrentColor()
 	{
 		return String.format("#%06x", color.getRGB());
 	}
+
 }

@@ -1,5 +1,6 @@
 package fortune.sweep.gui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -104,7 +105,9 @@ public class AlgorithmPainter
 	{
 		painter.setColor(new Color(colorDelaunay));
 		for (int i = 0; i < d.size(); i++) {
-			painter.paint(d.get(i));
+			Point p1 = d.get(i).getStart();
+			Point p2 = d.get(i).getEnd();
+			painter.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 		}
 	}
 
@@ -115,13 +118,16 @@ public class AlgorithmPainter
 
 		painter.setColor(new Color(colorSitesVisited));
 		for (int i = 0; i < sites.size(); i++) {
-			painter.paint(sites.get(i));
+			Point p = sites.get(i);
+			painter.fillCircle(p.getX(), p.getY(), 3.5);
 		}
 
 		painter.setColor(new Color(colorVoronoiSegments));
 		if (config.isDrawVoronoiLines()) {
 			for (int i = 0; i < edges.size(); i++) {
-				painter.paint(edges.get(i));
+				Point p1 = edges.get(i).getStart();
+				Point p2 = edges.get(i).getEnd();
+				painter.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 			}
 		}
 	}
@@ -151,14 +157,14 @@ public class AlgorithmPainter
 				} else {
 					painter.setColor(new Color(colorCircleEventPoints));
 				}
-				painter.paint(eventPoint);
+				painter.fillCircle(eventPoint.getX(), eventPoint.getY(), 3.5);
 			} else {
 				if (isActive) {
 					painter.setColor(new Color(colorSiteActive));
 				} else {
 					painter.setColor(new Color(colorSites));
 				}
-				painter.paint(eventPoint);
+				painter.fillCircle(eventPoint.getX(), eventPoint.getY(), 3.5);
 			}
 		}
 	}
@@ -240,6 +246,9 @@ public class AlgorithmPainter
 		double y1 = yTop;
 		// draw at least one segment to avoid gaps in corner cases
 		boolean firstSegment = true;
+		
+		List<Coordinate> coords = new ArrayList<Coordinate>();
+		coords.add(new Coordinate(x1, y1));
 		// loop over y values
 		for (double y2 = yTop + yStep; y2 < yMax || firstSegment; y2 += yStep) {
 			firstSegment = false;
@@ -249,12 +258,13 @@ public class AlgorithmPainter
 			}
 			double x2 = sweepX - current.f(y2);
 			if (y2 > yTop && (x1 >= 0.0D || x2 >= 0.0D)) {
-				painter.drawLine(x1, y1, x2, y2);
+				coords.add(new Coordinate(x2, y2));
 			}
 			// remember coordinates values for the next round
 			x1 = x2;
 			y1 = y2;
 		}
+		painter.drawPath(coords);
 	}
 
 	private void paintTraces(double beachY, ArcNode current, double sweepX)

@@ -1,10 +1,10 @@
 package fortune.sweep.gui.swing;
 
 import java.awt.Graphics;
+import java.util.List;
 
-import fortune.sweep.geometry.Edge;
-import fortune.sweep.geometry.Point;
 import fortune.sweep.gui.Color;
+import fortune.sweep.gui.Coordinate;
 import fortune.sweep.gui.Painter;
 
 public class AwtPainter implements Painter
@@ -58,18 +58,16 @@ public class AwtPainter implements Painter
 	}
 
 	@Override
-	public void paint(Point p)
+	public void drawPath(List<Coordinate> points)
 	{
-		g.fillOval((int) Math.round(p.getX() - 3.0),
-				(int) Math.round(p.getY() - 3.0), 7, 7);
-	}
-
-	@Override
-	public void paint(Edge e)
-	{
-		Point p1 = e.getStart();
-		Point p2 = e.getEnd();
-		drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		if (points.size() < 2) {
+			return;
+		}
+		for (int i = 0; i < points.size() - 1; i++) {
+			Coordinate c1 = points.get(i);
+			Coordinate c2 = points.get(i + 1);
+			drawLine(c1.getX(), c1.getY(), c2.getX(), c2.getY());
+		}
 	}
 
 	@Override
