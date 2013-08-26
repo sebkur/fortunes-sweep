@@ -17,9 +17,14 @@ The original authors state the following:
 I release this modified version of the software as a whole under the terms of the **GNU General Public License Version 3** **(GNU GPLv3)**.
 
 # Building and Running
-ant compile
 
-java -cp bin:lib/\*:lib/batik/\* fortune.sweep.gui.swing.SwingFortune
+To build the project, use ant:
+
+> `ant compile`
+
+To run the Swing application, run the following:
+
+> `java -cp bin:lib/*:lib/batik/* fortune.sweep.gui.swing.SwingFortune`
 
 # Notes
 
