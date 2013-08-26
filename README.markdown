@@ -12,7 +12,9 @@ Also there is a port via GWT to Javascript.
 
 The original authors state the following:
 
-Permission to copy, use, modify, sell and distribute this software is granted. This software is provided “as is” without express or implied warranty, and with no claim as to its suitability for any purpose.
+> Permission to copy, use, modify, sell and distribute this software is granted. This software is provided “as is” without express or implied warranty, and with no claim as to its suitability for any purpose.
+
+I release this modified version of the software as a whole under the terms of the **GNU General Public License Version 3** **(GNU GPLv3)**.
 
 # Building and Running
 ant compile
