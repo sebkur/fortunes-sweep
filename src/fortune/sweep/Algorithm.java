@@ -215,10 +215,8 @@ public class Algorithm
 
 	public synchronized boolean moveForward(double amount)
 	{
-		if (events.size() == 0 || sweepX < events.top().getX()) {
-			sweepX += amount;
-			currentEvent = null;
-		}
+		sweepX += amount;
+		currentEvent = null;
 
 		double xPosOld = sweepX;
 		while (events.size() != 0 && xPosOld >= events.top().getX()) {
@@ -228,6 +226,10 @@ public class Algorithm
 			currentEvent = eventPoint;
 		}
 		sweepX = xPosOld;
+
+		if (currentEvent != null && sweepX > currentEvent.getX()) {
+			currentEvent = null;
+		}
 
 		notifyWatchers();
 		return !isFinshed();
