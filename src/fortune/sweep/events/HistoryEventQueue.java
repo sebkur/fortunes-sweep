@@ -23,33 +23,43 @@ public class HistoryEventQueue extends EventQueue
 		EventQueueModification modification = new EventQueueModification(
 				algorithm.getSweepX(), Type.ADD, eventPoint);
 		if (eventPoint instanceof CirclePoint) {
-			// Circle event should always get through
+			// Circle events will just be appended
 			modifications.add(modification);
 			insert(eventPoint);
 			return true;
 		} else if (eventPoint instanceof SitePoint) {
-			// Site events should only be allowed if they will be inserted at
-			// the correct position. That's only if there's no event yet or if
-			// the latest modification is the insertion of a site event, too.
-			if (modifications.size() == 0) {
-				modifications.add(modification);
-				insert(eventPoint);
-				return true;
-			} else {
-				EventQueueModification latest = getLatestModification();
-				if (latest.getType() == Type.ADD
-						&& latest.getEventPoint() instanceof SitePoint) {
-					modifications.add(modification);
-					insert(eventPoint);
-					return true;
-				}
-			}
-			// TODO: now we cannot add any sites after the sweep began. This is
-			// a little restrictive. To relax this, we would have to make sure
-			// the eventsQueue and the modification list will be sane after late
-			// insertion.
+			// Site events need to be inserted at the correct position
+			int pos = findLastSiteInsertion();
+			modifications.add(pos + 1, modification);
+			insert(eventPoint);
+			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Find the position of the last insertion of a SitePoint. Since all
+	 * SitePoint insertion are stored as a sequence at the beginning of the
+	 * modifications list, the returned value is the index of the last SitePoint
+	 * insertion of that sequence.
+	 * 
+	 * @return the index of the last SitePoint insertion in the sequence of
+	 *         SitePoint insertions or -1 if there has not been any SitePoint
+	 *         insertion yet.
+	 */
+	private int findLastSiteInsertion()
+	{
+		int pos = -1;
+		for (int i = 0; i < modifications.size(); i++) {
+			EventQueueModification mod = modifications.get(i);
+			if (mod.getType() == Type.ADD
+					&& mod.getEventPoint() instanceof SitePoint) {
+				pos = i;
+			} else {
+				break;
+			}
+		}
+		return pos;
 	}
 
 	@Override
