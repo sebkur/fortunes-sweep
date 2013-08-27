@@ -46,7 +46,7 @@ public class Algorithm
 	 * Event queue with site and circle events plus a special pointer to the
 	 * currently active event.
 	 */
-	private HistoryEventQueue events;
+	private HistoryEventQueue events = new HistoryEventQueue(this);;
 	private EventPoint currentEvent;
 
 	/*
@@ -59,7 +59,7 @@ public class Algorithm
 	/*
 	 * The beachline data structure.
 	 */
-	private ArcTree arcs;
+	private ArcTree arcs = new ArcTree();
 
 	/*
 	 * Watchers that need to be notified once the algorithm moved to a new
@@ -185,8 +185,8 @@ public class Algorithm
 	private synchronized void init()
 	{
 		sweepX = 0;
-		arcs = new ArcTree();
-		events = new HistoryEventQueue(this);
+		arcs.clear();
+		events.clear();
 		executedEvents = new Stack<EventPoint>();
 		currentEvent = null;
 		voronoi.clear();

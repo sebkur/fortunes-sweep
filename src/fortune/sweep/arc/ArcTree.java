@@ -73,4 +73,9 @@ public class ArcTree
 		return size;
 	}
 
+	public void clear()
+	{
+		arcs = null;
+	}
+
 }

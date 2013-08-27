@@ -23,6 +23,7 @@ import fortune.sweep.gui.swing.action.ExportSvgAction;
 import fortune.sweep.gui.swing.action.OpenAction;
 import fortune.sweep.gui.swing.action.QuitAction;
 import fortune.sweep.gui.swing.action.SaveAction;
+import fortune.sweep.gui.swing.eventqueue.EventQueueDialog;
 
 public class SwingFortune extends JFrame implements Runnable
 {
@@ -39,6 +40,8 @@ public class SwingFortune extends JFrame implements Runnable
 	private Controls controls;
 	private Config config;
 
+	private EventQueueDialog eventQueueDialog;
+
 	private JPanel main;
 	private JMenuBar menu;
 	private Settings settings;
@@ -51,16 +54,17 @@ public class SwingFortune extends JFrame implements Runnable
 	public SwingFortune()
 	{
 		super("Fortune's sweep");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		init();
-
-		setSize(800, 600);
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public void init()
 	{
+		/*
+		 * Menus
+		 */
+
 		menu = new JMenuBar();
 
 		JMenu menuFile = new JMenu("File");
@@ -83,13 +87,13 @@ public class SwingFortune extends JFrame implements Runnable
 
 		setJMenuBar(menu);
 
+		/*
+		 * Components, layout
+		 */
+
 		main = new JPanel();
 		setContentPane(main);
 		main.setLayout(new BorderLayout());
-
-		/*
-		 * canvas
-		 */
 
 		algorithm = new Algorithm();
 		config = new Config();
@@ -127,6 +131,21 @@ public class SwingFortune extends JFrame implements Runnable
 			}
 
 		});
+
+		setSize(800, 600);
+		setVisible(true);
+
+		/*
+		 * EventQueue dialog
+		 */
+
+		eventQueueDialog = new EventQueueDialog(this, algorithm);
+		eventQueueDialog.setVisible(true);
+		eventQueueDialog.setLocation(getX() + getWidth(), (int) getLocation().getY());
+
+		/*
+		 * Start thread
+		 */
 
 		thread = new Thread(this);
 		thread.start();

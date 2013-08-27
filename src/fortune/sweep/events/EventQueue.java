@@ -1,10 +1,11 @@
 package fortune.sweep.events;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 
 public class EventQueue
 {
@@ -54,11 +55,16 @@ public class EventQueue
 	public synchronized void insert(EventPoint eventPoint)
 	{
 		points.add(eventPoint);
+		fireEventQueueChanged();
 	}
 
 	public synchronized boolean remove(EventPoint eventPoint)
 	{
-		return points.remove(eventPoint);
+		boolean removed = points.remove(eventPoint);
+		if (removed) {
+			fireEventQueueChanged();
+		}
+		return removed;
 	}
 
 	public synchronized EventPoint top()
@@ -70,6 +76,7 @@ public class EventQueue
 	{
 		EventPoint point = points.first();
 		points.remove(point);
+		fireEventQueueChanged();
 		return point;
 	}
 
@@ -77,7 +84,7 @@ public class EventQueue
 	{
 		return points.iterator();
 	}
-	
+
 	public synchronized EventQueue getCopy()
 	{
 		EventQueue copy = new EventQueue();
@@ -85,6 +92,46 @@ public class EventQueue
 			copy.insert(point);
 		}
 		return copy;
+	}
+
+	public synchronized EventPoint get(int index)
+	{
+		// TODO: this is inefficient
+		Iterator<EventPoint> iterator = iterator();
+		EventPoint point = null;
+		for (int i = 0; i <= index; i++) {
+			if (iterator.hasNext()) {
+				point = iterator.next();
+			} else {
+				return null;
+			}
+		}
+		return point;
+	}
+
+	private List<EventQueueListener> listeners = new ArrayList<EventQueueListener>();
+
+	public void addEventQueueListener(EventQueueListener listener)
+	{
+		listeners.add(listener);
+	}
+
+	public void removeEventQueueListener(EventQueueListener listener)
+	{
+		listeners.remove(listener);
+	}
+
+	private void fireEventQueueChanged()
+	{
+		for (EventQueueListener listener : listeners) {
+			listener.update();
+		}
+	}
+
+	public void clear()
+	{
+		points.clear();
+		fireEventQueueChanged();
 	}
 
 }

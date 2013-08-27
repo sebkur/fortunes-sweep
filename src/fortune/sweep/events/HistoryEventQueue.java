@@ -119,5 +119,11 @@ public class HistoryEventQueue extends EventQueue
 
 		return modification;
 	}
+	
+	public void clear()
+	{
+		super.clear();
+		modifications.clear();
+	}
 
 }
