@@ -7,9 +7,9 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fortune.sweep.gui.Color;
-import fortune.sweep.gui.Coordinate;
-import fortune.sweep.gui.Painter;
+import fortune.sweep.gui.core.Color;
+import fortune.sweep.gui.core.Coordinate;
+import fortune.sweep.gui.core.Painter;
 
 public class SvgPainter implements Painter
 {

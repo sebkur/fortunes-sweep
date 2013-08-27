@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-import fortune.sweep.gui.Config;
+import fortune.sweep.gui.core.Config;
 
 public class Settings extends JToolBar implements ItemListener
 {

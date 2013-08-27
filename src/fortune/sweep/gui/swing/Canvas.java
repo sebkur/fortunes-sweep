@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import fortune.sweep.Algorithm;
 import fortune.sweep.AlgorithmWatcher;
 import fortune.sweep.geometry.Point;
-import fortune.sweep.gui.AlgorithmPainter;
-import fortune.sweep.gui.Config;
+import fortune.sweep.gui.core.AlgorithmPainter;
+import fortune.sweep.gui.core.Config;
 
 public class Canvas extends JPanel implements AlgorithmWatcher
 {

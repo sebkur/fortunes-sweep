@@ -10,7 +10,7 @@ import javax.xml.transform.TransformerException;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.export.SvgExporter;
-import fortune.sweep.gui.Config;
+import fortune.sweep.gui.core.Config;
 import fortune.sweep.gui.swing.FileFilterSvg;
 import fortune.sweep.gui.swing.SwingFortune;
 

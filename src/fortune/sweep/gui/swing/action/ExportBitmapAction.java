@@ -9,7 +9,7 @@ import javax.swing.JFileChooser;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.export.GraphicsExporter;
-import fortune.sweep.gui.Config;
+import fortune.sweep.gui.core.Config;
 import fortune.sweep.gui.swing.FileFilterBitmap;
 import fortune.sweep.gui.swing.SwingFortune;
 

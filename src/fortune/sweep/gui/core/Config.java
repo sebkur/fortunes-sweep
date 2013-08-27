@@ -1,4 +1,4 @@
-package fortune.sweep.gui;
+package fortune.sweep.gui.core;
 
 public class Config
 {

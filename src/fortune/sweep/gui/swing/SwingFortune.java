@@ -17,7 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import fortune.sweep.Algorithm;
-import fortune.sweep.gui.Config;
+import fortune.sweep.gui.core.Config;
 import fortune.sweep.gui.swing.action.ExportBitmapAction;
 import fortune.sweep.gui.swing.action.ExportSvgAction;
 import fortune.sweep.gui.swing.action.OpenAction;

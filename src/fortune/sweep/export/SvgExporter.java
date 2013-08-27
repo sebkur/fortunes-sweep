@@ -18,8 +18,8 @@ import org.w3c.dom.Element;
 
 import fortune.sweep.Algorithm;
 import fortune.sweep.export.svg.SvgPainter;
-import fortune.sweep.gui.AlgorithmPainter;
-import fortune.sweep.gui.Config;
+import fortune.sweep.gui.core.AlgorithmPainter;
+import fortune.sweep.gui.core.Config;
 
 public class SvgExporter
 {

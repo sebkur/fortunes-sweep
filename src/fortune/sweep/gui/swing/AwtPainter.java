@@ -3,9 +3,9 @@ package fortune.sweep.gui.swing;
 import java.awt.Graphics;
 import java.util.List;
 
-import fortune.sweep.gui.Color;
-import fortune.sweep.gui.Coordinate;
-import fortune.sweep.gui.Painter;
+import fortune.sweep.gui.core.Color;
+import fortune.sweep.gui.core.Coordinate;
+import fortune.sweep.gui.core.Painter;
 
 public class AwtPainter implements Painter
 {
