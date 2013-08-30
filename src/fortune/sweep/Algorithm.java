@@ -251,7 +251,7 @@ public class Algorithm
 			EventQueueModification mod = events.getLatestModification();
 			EventPoint event = events.getLatestModification().getEventPoint();
 			if (event instanceof SitePoint) {
-				if (!(event.getX() >= sweepX && event.getX() <= xPosBefore)) {
+				if (!(mod.getX() >= sweepX && mod.getX() <= xPosBefore)) {
 					break;
 				}
 			} else if (event instanceof CirclePoint) {

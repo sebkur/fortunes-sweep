@@ -20,14 +20,16 @@ public class HistoryEventQueue extends EventQueue
 
 	public synchronized boolean insertEvent(EventPoint eventPoint)
 	{
-		EventQueueModification modification = new EventQueueModification(
-				algorithm.getSweepX(), Type.ADD, eventPoint);
 		if (eventPoint instanceof CirclePoint) {
+			EventQueueModification modification = new EventQueueModification(
+					algorithm.getSweepX(), Type.ADD, eventPoint);
 			// Circle events will just be appended
 			modifications.add(modification);
 			insert(eventPoint);
 			return true;
 		} else if (eventPoint instanceof SitePoint) {
+			EventQueueModification modification = new EventQueueModification(
+					0.0, Type.ADD, eventPoint);
 			// Site events need to be inserted at the correct position
 			int pos = findLastSiteInsertion();
 			modifications.add(pos + 1, modification);
