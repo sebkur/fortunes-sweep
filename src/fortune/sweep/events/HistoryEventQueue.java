@@ -107,7 +107,9 @@ public class HistoryEventQueue extends EventQueue
 		// Reverse EventQueue modification
 		if (modification.getType() == Type.ADD) {
 			// Remove if the event was added
-			super.remove(modification.getEventPoint());
+			if (modification.getEventPoint() instanceof CirclePoint) {
+				super.remove(modification.getEventPoint());
+			}
 		} else if (modification.getType() == Type.REMOVE) {
 			// Insert if the event was removed
 			insert(modification.getEventPoint());
