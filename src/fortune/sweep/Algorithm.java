@@ -321,6 +321,11 @@ public class Algorithm
 		notifyWatchers();
 	}
 
+	public void previousEvent()
+	{
+		// TODO implement this
+	}
+
 	public synchronized void clear()
 	{
 		sites = new ArrayList<Point>();

@@ -70,8 +70,9 @@ public class Controls extends Panel implements ActionListener
 			icons.put(key, icon);
 		}
 
-		String keys[] = { KEY_PLAY, KEY_PLAY_REVERSE, KEY_NEXT_EVENT,
-				KEY_PREV_PIXEL, KEY_NEXT_PIXEL, KEY_RESTART, KEY_CLEAR };
+		String keys[] = { KEY_PLAY, KEY_PLAY_REVERSE, KEY_PREVIOUS_EVENT,
+				KEY_NEXT_EVENT, KEY_PREV_PIXEL, KEY_NEXT_PIXEL, KEY_RESTART,
+				KEY_CLEAR };
 		buttons = new JButton[keys.length];
 		for (int i = 0; i < keys.length; i++) {
 			buttons[i] = new JButton(icons.get(keys[i]));
@@ -108,6 +109,8 @@ public class Controls extends Panel implements ActionListener
 				}
 			}
 			threadRunning(fortune.isRunning());
+		} else if (e.getSource() == buttons[i++]) {
+			algorithm.previousEvent();
 		} else if (e.getSource() == buttons[i++]) {
 			algorithm.nextEvent();
 		} else if (e.getSource() == buttons[i++]) {
