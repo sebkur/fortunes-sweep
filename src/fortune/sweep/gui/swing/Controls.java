@@ -136,13 +136,13 @@ public class Controls extends Panel implements ActionListener
 				set(buttons[0], KEY_PLAY);
 				set(buttons[1], KEY_PAUSE);
 			}
-			buttons[3].setEnabled(false);
 			buttons[4].setEnabled(false);
+			buttons[5].setEnabled(false);
 		} else {
 			set(buttons[0], KEY_PLAY);
 			set(buttons[1], KEY_PLAY_REVERSE);
-			buttons[3].setEnabled(true);
 			buttons[4].setEnabled(true);
+			buttons[5].setEnabled(true);
 		}
 		buttons[0].invalidate();
 		invalidate();
