@@ -50,6 +50,7 @@
 
 	<target name="dist" depends="compile" description="generate the distribution">
 		<jar jarfile="${dist}/fortune.jar" basedir="${build}">
+			<fileset dir="." includes="res/**"/>
 		</jar>
 	</target>
 

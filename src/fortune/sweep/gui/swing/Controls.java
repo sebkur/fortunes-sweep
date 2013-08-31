@@ -3,7 +3,10 @@ package fortune.sweep.gui.swing;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 
 import fortune.sweep.Algorithm;
@@ -19,24 +22,60 @@ public class Controls extends Panel implements ActionListener
 
 	private JButton buttons[];
 
-	private static String TEXT_PLAY = "Play";
-	private static String TEXT_PLAY_REVERSE = "Play Reverse";
-	private static String TEXT_PAUSE = "Pause";
-	private static String TEXT_NEXT_EVENT = "Next event";
-	private static String TEXT_PREV_PIXEL = "Previous pixel";
-	private static String TEXT_NEXT_PIXEL = "Next pixel";
-	private static String TEXT_CLEAR = "Clear";
-	private static String TEXT_RESTART = "Restart";
+	private static String KEY_PLAY = "play";
+	private static String KEY_PLAY_REVERSE = "play-reverse";
+	private static String KEY_PAUSE = "pause";
+	private static String KEY_PREVIOUS_EVENT = "previous-event";
+	private static String KEY_NEXT_EVENT = "next-event";
+	private static String KEY_PREV_PIXEL = "previous-pixel";
+	private static String KEY_NEXT_PIXEL = "next-pixel";
+	private static String KEY_CLEAR = "clear";
+	private static String KEY_RESTART = "restart";
+
+	private static Map<String, String> texts = new HashMap<String, String>();
+	static {
+		texts.put(KEY_PLAY, "Play");
+		texts.put(KEY_PLAY_REVERSE, "Play Reverse");
+		texts.put(KEY_PAUSE, "Pause");
+		texts.put(KEY_PREVIOUS_EVENT, "Previous event");
+		texts.put(KEY_NEXT_EVENT, "Next event");
+		texts.put(KEY_PREV_PIXEL, "Previous pixel");
+		texts.put(KEY_NEXT_PIXEL, "Next pixel");
+		texts.put(KEY_CLEAR, "Clear");
+		texts.put(KEY_RESTART, "Restart");
+	}
+
+	private static Map<String, String> paths = new HashMap<String, String>();
+	static {
+		paths.put(KEY_PLAY, "res/media-playback-start.png");
+		paths.put(KEY_PLAY_REVERSE, "res/media-playback-start-rtl.png");
+		paths.put(KEY_PAUSE, "res/media-playback-pause.png");
+		paths.put(KEY_PREVIOUS_EVENT, "res/media-skip-backward.png");
+		paths.put(KEY_NEXT_EVENT, "res/media-skip-forward.png");
+		paths.put(KEY_PREV_PIXEL, "res/media-seek-backward.png");
+		paths.put(KEY_NEXT_PIXEL, "res/media-seek-backward-rtl.png");
+		paths.put(KEY_CLEAR, "res/media-eject.png");
+		paths.put(KEY_RESTART, "res/media-playback-stop.png");
+	}
+
+	private Map<String, Icon> icons = new HashMap<String, Icon>();
 
 	public Controls(SwingFortune fortune, Algorithm algorithm)
 	{
 		this.fortune = fortune;
 		this.algorithm = algorithm;
-		String as[] = { TEXT_PLAY, TEXT_PLAY_REVERSE, TEXT_NEXT_EVENT,
-				TEXT_PREV_PIXEL, TEXT_NEXT_PIXEL, TEXT_CLEAR, TEXT_RESTART };
-		buttons = new JButton[as.length];
-		for (int i = 0; i < as.length; i++) {
-			buttons[i] = new JButton(as[i]);
+
+		for (String key : paths.keySet()) {
+			Icon icon = ImageLoader.load(paths.get(key));
+			icons.put(key, icon);
+		}
+
+		String keys[] = { KEY_PLAY, KEY_PLAY_REVERSE, KEY_NEXT_EVENT,
+				KEY_PREV_PIXEL, KEY_NEXT_PIXEL, KEY_RESTART, KEY_CLEAR };
+		buttons = new JButton[keys.length];
+		for (int i = 0; i < keys.length; i++) {
+			buttons[i] = new JButton(icons.get(keys[i]));
+			buttons[i].setToolTipText(texts.get(keys[i]));
 			buttons[i].addActionListener(this);
 			add(buttons[i]);
 		}
@@ -76,11 +115,11 @@ public class Controls extends Panel implements ActionListener
 		} else if (e.getSource() == buttons[i++]) {
 			algorithm.nextPixel();
 		} else if (e.getSource() == buttons[i++]) {
+			algorithm.restart();
+		} else if (e.getSource() == buttons[i++]) {
 			fortune.stopRunning();
 			threadRunning(false);
 			algorithm.clear();
-		} else if (e.getSource() == buttons[i++]) {
-			algorithm.restart();
 		}
 	}
 
@@ -88,22 +127,28 @@ public class Controls extends Panel implements ActionListener
 	{
 		if (running) {
 			if (fortune.isForeward()) {
-				buttons[0].setText(TEXT_PAUSE);
-				buttons[1].setText(TEXT_PLAY_REVERSE);
+				set(buttons[0], KEY_PAUSE);
+				set(buttons[1], KEY_PLAY_REVERSE);
 			} else {
-				buttons[0].setText(TEXT_PLAY);
-				buttons[1].setText(TEXT_PAUSE);
+				set(buttons[0], KEY_PLAY);
+				set(buttons[1], KEY_PAUSE);
 			}
 			buttons[3].setEnabled(false);
 			buttons[4].setEnabled(false);
 		} else {
-			buttons[0].setText(TEXT_PLAY);
-			buttons[1].setText(TEXT_PLAY_REVERSE);
+			set(buttons[0], KEY_PLAY);
+			set(buttons[1], KEY_PLAY_REVERSE);
 			buttons[3].setEnabled(true);
 			buttons[4].setEnabled(true);
 		}
 		buttons[0].invalidate();
 		invalidate();
 		validate();
+	}
+
+	private void set(JButton button, String key)
+	{
+		button.setToolTipText(texts.get(key));
+		button.setIcon(icons.get(key));
 	}
 }

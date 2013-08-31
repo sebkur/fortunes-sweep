@@ -24,7 +24,13 @@ To build the project, use ant:
 
 To run the Swing application, run the following:
 
-> `java -cp bin:lib/*:lib/batik/* fortune.sweep.gui.swing.SwingFortune`
+> `java -cp bin:lib/*:lib/batik/*:. fortune.sweep.gui.swing.SwingFortune`
+
+Or alternatively:
+
+> `ant dist`
+
+> `java -cp dist/fortune.jar fortune.sweep.gui.swing.SwingFortune`
 
 # Notes
 
