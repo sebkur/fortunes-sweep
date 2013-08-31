@@ -244,6 +244,32 @@ public class Algorithm
 		sweepX -= amount;
 		currentEvent = null;
 
+		restoreEventQueue(xPosBefore);
+
+		/*
+		 * Go through executed events and revert everything within the interval
+		 */
+		while (executedEvents.size() > 0) {
+			EventPoint lastEvent = executedEvents.top();
+			if (!(lastEvent.getX() >= sweepX && lastEvent.getX() <= xPosBefore)) {
+				break;
+			}
+			executedEvents.pop();
+			if (lastEvent instanceof SitePoint) {
+				SitePoint sitePoint = (SitePoint) lastEvent;
+				revert(sitePoint);
+			} else if (lastEvent instanceof CirclePoint) {
+				CirclePoint circlePoint = (CirclePoint) lastEvent;
+				revert(circlePoint);
+			}
+		}
+
+		notifyWatchers();
+		return sweepX > 0;
+	}
+
+	private void restoreEventQueue(double xPosBefore)
+	{
 		/*
 		 * Restore event queue
 		 */
@@ -267,27 +293,6 @@ public class Algorithm
 			}
 			events.revertModification();
 		}
-
-		/*
-		 * Go through executed events and revert everything within the interval
-		 */
-		while (executedEvents.size() > 0) {
-			EventPoint lastEvent = executedEvents.top();
-			if (!(lastEvent.getX() >= sweepX && lastEvent.getX() <= xPosBefore)) {
-				break;
-			}
-			executedEvents.pop();
-			if (lastEvent instanceof SitePoint) {
-				SitePoint sitePoint = (SitePoint) lastEvent;
-				revert(sitePoint);
-			} else if (lastEvent instanceof CirclePoint) {
-				CirclePoint circlePoint = (CirclePoint) lastEvent;
-				revert(circlePoint);
-			}
-		}
-
-		notifyWatchers();
-		return sweepX > 0;
 	}
 
 	public synchronized void setSweep(double x)
@@ -323,7 +328,60 @@ public class Algorithm
 
 	public void previousEvent()
 	{
-		// TODO implement this
+		if (executedEvents.isEmpty()) {
+			// If we are before the first event but after 0, just go to 0.
+			if (sweepX > 0) {
+				sweepX = 0;
+				notifyWatchers();
+			}
+			return;
+		}
+
+		double xPosBefore = sweepX;
+
+		EventPoint point = executedEvents.pop();
+		if (sweepX > point.getX()) {
+			// If we are beyond some event
+			sweepX = point.getX();
+			restoreEventQueue(xPosBefore);
+		} else if (sweepX == point.getX()) {
+			// If we are exactly at some event
+			restoreEventQueue(xPosBefore);
+
+			if (point instanceof SitePoint) {
+				SitePoint sitePoint = (SitePoint) point;
+				revert(sitePoint);
+			} else if (point instanceof CirclePoint) {
+				CirclePoint circlePoint = (CirclePoint) point;
+				revert(circlePoint);
+			}
+			if (executedEvents.isEmpty()) {
+				point = null;
+			} else {
+				point = executedEvents.pop();
+				sweepX = point.getX();
+				restoreEventQueue(xPosBefore);
+			}
+		}
+		if (point == null) {
+			// If no executed events are left, we go to 0
+			sweepX = 0;
+			currentEvent = null;
+		} else {
+			// Revert the event that we just arrived at
+			if (point instanceof SitePoint) {
+				SitePoint sitePoint = (SitePoint) point;
+				revert(sitePoint);
+			} else if (point instanceof CirclePoint) {
+				CirclePoint circlePoint = (CirclePoint) point;
+				revert(circlePoint);
+			}
+			// Replay the event that we just arrived at
+			events.pop();
+			process(point);
+			currentEvent = point;
+		}
+		notifyWatchers();
 	}
 
 	public synchronized void clear()
