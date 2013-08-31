@@ -1,5 +1,6 @@
 package fortune.sweep.gui.swing;
 
+import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,6 +78,7 @@ public class Controls extends Panel implements ActionListener
 		for (int i = 0; i < keys.length; i++) {
 			buttons[i] = new JButton(icons.get(keys[i]));
 			buttons[i].setToolTipText(texts.get(keys[i]));
+			buttons[i].setMargin(new Insets(0, 0, 0, 0));
 			buttons[i].addActionListener(this);
 			add(buttons[i]);
 		}
